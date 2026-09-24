@@ -9,9 +9,20 @@ from sqlalchemy import event
 from config import settings
 
 
+def _get_async_db_url(url: str) -> str:
+    """Ensure database URL uses the asyncpg driver."""
+    if url.startswith("postgres://"):
+        return url.replace("postgres://", "postgresql+asyncpg://", 1)
+    if url.startswith("postgresql://") and not url.startswith("postgresql+"):
+        return url.replace("postgresql://", "postgresql+asyncpg://", 1)
+    return url
+
+
 # Async engine for FastAPI
+DATABASE_URL = _get_async_db_url(settings.DATABASE_URL)
+
 engine = create_async_engine(
-    settings.DATABASE_URL,
+    DATABASE_URL,
     echo=settings.DEBUG,
     pool_size=10,
     max_overflow=20,
