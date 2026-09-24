@@ -1,0 +1,2295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>BHOOMI-X — AI-Powered Geospatial Reconciliation & Harmonization</title>
+<meta name="description" content="BHOOMI-X: AI + GIS platform for reconciling fragmented multi-source urban land records. SIH 2026 PS 26013."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+/* ===== DESIGN SYSTEM ===== */
+:root {
+  --navy-900: #060e1a;
+  --navy-800: #0b1f3a;
+  --navy-700: #112d52;
+  --navy-600: #1a3f6f;
+  --navy-500: #1769e0;
+  --navy-400: #4b8ef7;
+  --navy-300: #8fb8ff;
+
+  --green-600: #0d9448;
+  --green-500: #15b85a;
+  --green-400: #34d27b;
+  --green-100: #d8f4e4;
+  --green-50: #edfaf2;
+
+  --amber-600: #b87a00;
+  --amber-500: #e5a900;
+  --amber-400: #ffc933;
+  --amber-100: #fff3cc;
+  --amber-50: #fffae6;
+
+  --red-600: #c42b2b;
+  --red-500: #e5413d;
+  --red-400: #f06b68;
+  --red-100: #fde0df;
+  --red-50: #fef2f2;
+
+  --blue-500: #3b82f6;
+  --blue-100: #dbeafe;
+
+  --grey-900: #111827;
+  --grey-800: #1f2937;
+  --grey-700: #374151;
+  --grey-600: #4b5563;
+  --grey-500: #6b7280;
+  --grey-400: #9ca3af;
+  --grey-300: #d1d5db;
+  --grey-200: #e5e7eb;
+  --grey-100: #f3f4f6;
+  --grey-50: #f9fafb;
+
+  --glass-bg: rgba(255,255,255,0.72);
+  --glass-border: rgba(255,255,255,0.25);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+  --shadow-glow: 0 0 24px rgba(23,105,224,0.15);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--grey-100);
+  color: var(--grey-900);
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--grey-300); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--grey-400); }
+
+/* ===== HEADER ===== */
+#app-header {
+  background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 50%, var(--navy-700) 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 60px;
+  position: relative;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+.header-left { display: flex; align-items: center; gap: 20px; }
+.brand {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  background: linear-gradient(135deg, #fff 0%, var(--navy-300) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.brand-sub {
+  font-size: 11px;
+  opacity: 0.6;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.sih-badge {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(8px);
+}
+.user-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--navy-500), var(--green-500));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; color: white;
+  border: 2px solid rgba(255,255,255,0.2);
+}
+
+/* ===== NAV TABS ===== */
+#nav-tabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(255,255,255,0.06);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+}
+.nav-tab {
+  padding: 7px 16px;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.55);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.nav-tab:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.06); }
+.nav-tab.active {
+  color: white;
+  background: var(--navy-500);
+  box-shadow: 0 2px 8px rgba(23,105,224,0.4);
+}
+.nav-tab svg { width: 16px; height: 16px; }
+.tab-badge {
+  background: var(--red-500);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  min-width: 18px;
+  text-align: center;
+}
+
+/* ===== MAIN CONTENT ===== */
+#main-content {
+  height: calc(100vh - 60px);
+  overflow: hidden;
+  position: relative;
+}
+
+.screen {
+  display: none;
+  height: 100%;
+  animation: fadeIn 0.35s ease;
+}
+.screen.active { display: flex; flex-direction: column; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes countUp {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes progressBar {
+  from { width: 0; }
+}
+
+/* ===== CARDS ===== */
+.card {
+  background: white;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-md);
+}
+
+/* ===== STATUS BADGES ===== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.badge-green { background: var(--green-100); color: var(--green-600); }
+.badge-amber { background: var(--amber-100); color: var(--amber-600); }
+.badge-red { background: var(--red-100); color: var(--red-600); }
+.badge-blue { background: var(--blue-100); color: var(--navy-500); }
+.badge-grey { background: var(--grey-200); color: var(--grey-600); }
+
+/* ===== BUTTONS ===== */
+.btn {
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 9px 18px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--navy-500), #2a7af7);
+  color: white;
+  box-shadow: 0 2px 8px rgba(23,105,224,0.3);
+}
+.btn-primary:hover { box-shadow: 0 4px 16px rgba(23,105,224,0.45); transform: translateY(-1px); }
+.btn-success {
+  background: linear-gradient(135deg, var(--green-600), var(--green-500));
+  color: white;
+}
+.btn-success:hover { box-shadow: 0 4px 12px rgba(21,184,90,0.35); transform: translateY(-1px); }
+.btn-danger {
+  background: linear-gradient(135deg, var(--red-600), var(--red-500));
+  color: white;
+}
+.btn-danger:hover { box-shadow: 0 4px 12px rgba(229,65,61,0.35); transform: translateY(-1px); }
+.btn-ghost {
+  background: var(--grey-100);
+  color: var(--grey-700);
+  border: 1px solid var(--grey-200);
+}
+.btn-ghost:hover { background: var(--grey-200); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+
+/* ===== SECTION TITLES ===== */
+.section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--grey-800);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title svg { width: 18px; height: 18px; color: var(--navy-500); }
+
+/* ===== TOAST ===== */
+#toast-container {
+  position: fixed;
+  top: 72px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.toast {
+  background: var(--navy-800);
+  color: white;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  animation: slideInRight 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 280px;
+}
+.toast.success { border-left: 4px solid var(--green-500); }
+.toast.warning { border-left: 4px solid var(--amber-500); }
+.toast.error { border-left: 4px solid var(--red-500); }
+.toast.info { border-left: 4px solid var(--blue-500); }
+
+/* ===================== */
+/* SCREEN 1: DASHBOARD   */
+/* ===================== */
+#screen-dashboard {
+  padding: 20px 24px;
+  overflow-y: auto;
+  gap: 20px;
+}
+.dash-top { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+.kpi-card {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 18px;
+  border: 1px solid var(--grey-200);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+}
+.kpi-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.kpi-card.kpi-parcels::before { background: linear-gradient(90deg, var(--navy-500), var(--navy-400)); }
+.kpi-card.kpi-harmonized::before { background: linear-gradient(90deg, var(--green-600), var(--green-400)); }
+.kpi-card.kpi-confidence::before { background: linear-gradient(90deg, #6366f1, #818cf8); }
+.kpi-card.kpi-review::before { background: linear-gradient(90deg, var(--amber-600), var(--amber-400)); }
+.kpi-card.kpi-conflicts::before { background: linear-gradient(90deg, var(--red-600), var(--red-400)); }
+.kpi-card.kpi-changes::before { background: linear-gradient(90deg, var(--blue-500), #60a5fa); }
+.kpi-label { font-size: 11px; font-weight: 600; color: var(--grey-500); text-transform: uppercase; letter-spacing: 0.8px; }
+.kpi-value { font-size: 30px; font-weight: 800; color: var(--grey-900); margin: 6px 0 4px; animation: countUp 0.6s ease; }
+.kpi-trend { font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 3px; }
+.kpi-trend.up { color: var(--green-600); }
+.kpi-trend.down { color: var(--red-600); }
+.kpi-trend.neutral { color: var(--grey-500); }
+
+.dash-body { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; flex: 1; }
+.dash-body .card { display: flex; flex-direction: column; }
+
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--grey-100);
+  font-size: 13px;
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.activity-time { color: var(--grey-400); font-size: 11px; margin-top: 2px; }
+
+.source-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--grey-100);
+  font-size: 13px;
+}
+.source-item:last-child { border-bottom: none; }
+.source-left { display: flex; align-items: center; gap: 10px; }
+.source-dot { width: 10px; height: 10px; border-radius: 50%; }
+.source-count { color: var(--grey-500); font-size: 12px; }
+
+.quick-actions { display: flex; flex-direction: column; gap: 10px; }
+.quick-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--grey-50);
+  border: 1px solid var(--grey-200);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--grey-700);
+}
+.quick-action-btn:hover { background: var(--navy-500); color: white; border-color: var(--navy-500); }
+.quick-action-btn:hover .qa-icon { background: rgba(255,255,255,0.2); color: white; }
+.qa-icon {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--navy-500);
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* ===================== */
+/* SCREEN 2: MAP         */
+/* ===================== */
+#screen-map {
+  flex-direction: row !important;
+  position: relative;
+}
+.map-sidebar {
+  width: 280px;
+  background: white;
+  border-right: 1px solid var(--grey-200);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  flex-shrink: 0;
+  z-index: 10;
+}
+.map-sidebar-section {
+  padding: 16px;
+  border-bottom: 1px solid var(--grey-100);
+}
+.map-search {
+  width: 100%;
+  padding: 9px 12px 9px 34px;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: var(--transition);
+  background: var(--grey-50) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239ca3af' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E") 10px center no-repeat;
+}
+.map-search:focus { border-color: var(--navy-500); background-color: white; box-shadow: 0 0 0 3px rgba(23,105,224,0.1); }
+
+.layer-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 0;
+  font-size: 13px;
+}
+.layer-toggle label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.layer-dot { width: 10px; height: 10px; border-radius: 3px; }
+.toggle-switch {
+  position: relative;
+  width: 36px; height: 20px;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0;
+  background: var(--grey-300);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 16px; height: 16px;
+  left: 2px; bottom: 2px;
+  background: white;
+  border-radius: 50%;
+  transition: var(--transition);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle-switch input:checked + .toggle-slider { background: var(--navy-500); }
+.toggle-switch input:checked + .toggle-slider::before { transform: translateX(16px); }
+
+.confidence-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--red-500), var(--amber-500), var(--green-500));
+  outline: none;
+  margin: 8px 0;
+}
+.confidence-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--navy-500);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+}
+.slider-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--grey-500); }
+
+.status-filter { display: flex; flex-direction: column; gap: 6px; }
+.status-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.status-check input { accent-color: var(--navy-500); }
+
+.map-container {
+  flex: 1;
+  position: relative;
+}
+#leaflet-map { width: 100%; height: 100%; }
+
+/* Override Leaflet popups */
+.leaflet-popup-content-wrapper {
+  border-radius: var(--radius-sm) !important;
+  box-shadow: var(--shadow-lg) !important;
+  font-family: 'Inter', sans-serif !important;
+}
+.leaflet-popup-content { margin: 12px 16px !important; font-size: 13px !important; }
+.parcel-popup-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+.parcel-popup-conf { font-size: 12px; color: var(--grey-600); }
+
+/* ===== PARCEL DETAIL DRAWER ===== */
+#parcel-drawer {
+  position: absolute;
+  right: 0; top: 0;
+  width: 380px;
+  height: 100%;
+  background: white;
+  border-left: 1px solid var(--grey-200);
+  box-shadow: -4px 0 24px rgba(0,0,0,0.1);
+  z-index: 50;
+  overflow-y: auto;
+  animation: slideInRight 0.3s ease;
+  display: none;
+}
+#parcel-drawer.open { display: block; }
+.drawer-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--grey-100);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.drawer-close {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: var(--grey-100);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--grey-500);
+  transition: var(--transition);
+}
+.drawer-close:hover { background: var(--grey-200); color: var(--grey-700); }
+.drawer-parcel-id { font-size: 20px; font-weight: 800; }
+.drawer-section {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--grey-100);
+}
+.drawer-section-title { font-size: 11px; font-weight: 700; color: var(--grey-500); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; }
+
+/* Confidence Gauge */
+.conf-gauge {
+  width: 120px; height: 120px;
+  position: relative;
+  margin: 0 auto 12px;
+}
+.conf-gauge svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.conf-gauge-bg { fill: none; stroke: var(--grey-200); stroke-width: 8; }
+.conf-gauge-fill { fill: none; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
+.conf-gauge-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.conf-gauge-value { font-size: 28px; font-weight: 800; }
+.conf-gauge-label { font-size: 10px; color: var(--grey-500); text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Source Evidence */
+.source-evidence {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.source-ev-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: var(--grey-50);
+}
+.source-ev-icon { font-size: 14px; }
+
+/* Score Bars */
+.score-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+.score-bar-label { width: 100px; font-weight: 600; color: var(--grey-600); flex-shrink: 0; }
+.score-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--grey-200);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.score-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  animation: progressBar 0.8s ease;
+}
+.score-bar-value { width: 36px; text-align: right; font-weight: 700; flex-shrink: 0; }
+
+/* AI Recommendation */
+.ai-recommendation {
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  border-left: 4px solid var(--navy-500);
+  background: linear-gradient(135deg, #f0f4ff, #fafaff);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.ai-rec-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--navy-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 4px;
+}
+.drawer-actions {
+  padding: 16px 20px;
+  display: flex;
+  gap: 8px;
+}
+
+/* ===================== */
+/* SCREEN 3: CONFLICTS   */
+/* ===================== */
+#screen-conflicts {
+  padding: 20px 24px;
+  overflow-y: auto;
+  gap: 16px;
+}
+.conflict-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.conflict-stats {
+  display: flex;
+  gap: 12px;
+}
+.conflict-stat {
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+}
+.conflict-table-wrap {
+  flex: 1;
+  overflow: auto;
+}
+.conflict-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.conflict-table thead th {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--grey-500);
+  background: var(--grey-50);
+  border-bottom: 2px solid var(--grey-200);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  cursor: pointer;
+  user-select: none;
+}
+.conflict-table thead th:hover { color: var(--navy-500); }
+.conflict-table tbody tr {
+  border-bottom: 1px solid var(--grey-100);
+  transition: var(--transition);
+  cursor: pointer;
+}
+.conflict-table tbody tr:hover { background: var(--grey-50); }
+.conflict-table tbody td { padding: 12px 14px; }
+.severity-high { color: var(--red-600); font-weight: 700; }
+.severity-medium { color: var(--amber-600); font-weight: 700; }
+.severity-low { color: var(--green-600); font-weight: 700; }
+.conf-score {
+  font-weight: 800;
+  font-size: 14px;
+}
+
+/* ===================== */
+/* SCREEN 4: DATA        */
+/* ===================== */
+#screen-data {
+  padding: 20px 24px;
+  overflow-y: auto;
+  gap: 16px;
+}
+.data-top { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.upload-zone {
+  border: 2px dashed var(--grey-300);
+  border-radius: var(--radius-md);
+  padding: 40px 20px;
+  text-align: center;
+  transition: var(--transition);
+  cursor: pointer;
+  position: relative;
+}
+.upload-zone:hover, .upload-zone.dragover {
+  border-color: var(--navy-500);
+  background: rgba(23,105,224,0.03);
+}
+.upload-zone.dragover {
+  border-style: solid;
+  box-shadow: 0 0 0 4px rgba(23,105,224,0.1);
+}
+.upload-icon {
+  width: 56px; height: 56px;
+  margin: 0 auto 12px;
+  background: linear-gradient(135deg, var(--navy-500), #2a7af7);
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  color: white;
+}
+.upload-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.upload-sub { font-size: 12px; color: var(--grey-500); }
+.upload-formats {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 12px;
+}
+.format-tag {
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--grey-100);
+  color: var(--grey-600);
+}
+
+.datasets-list { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.dataset-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--grey-200);
+  background: white;
+  transition: var(--transition);
+}
+.dataset-item:hover { box-shadow: var(--shadow-sm); }
+.dataset-left { display: flex; align-items: center; gap: 12px; }
+.dataset-icon {
+  width: 38px; height: 38px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.dataset-name { font-weight: 600; font-size: 13px; }
+.dataset-meta { font-size: 11px; color: var(--grey-500); display: flex; gap: 8px; }
+.dataset-right { display: flex; align-items: center; gap: 10px; }
+
+/* ===================== */
+/* SCREEN 5: PIPELINE    */
+/* ===================== */
+#screen-pipeline {
+  padding: 20px 24px;
+  overflow-y: auto;
+  gap: 16px;
+  align-items: center;
+}
+.pipeline-container {
+  max-width: 900px;
+  width: 100%;
+}
+.pipeline-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.pipeline-header h2 { font-size: 22px; font-weight: 800; }
+.pipeline-header p { color: var(--grey-500); font-size: 14px; margin-top: 4px; }
+
+.pipeline-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.pipeline-step {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-radius: var(--radius-sm);
+  background: white;
+  border: 1px solid var(--grey-200);
+  transition: var(--transition);
+}
+.pipeline-step.running {
+  border-color: var(--navy-500);
+  box-shadow: var(--shadow-glow);
+}
+.pipeline-step.complete {
+  border-color: var(--green-500);
+  background: var(--green-50);
+}
+.step-number {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  flex-shrink: 0;
+  background: var(--grey-200);
+  color: var(--grey-500);
+}
+.pipeline-step.complete .step-number { background: var(--green-500); color: white; }
+.pipeline-step.running .step-number { background: var(--navy-500); color: white; animation: pulse 1.5s infinite; }
+.step-info { flex: 1; }
+.step-name { font-weight: 700; font-size: 14px; }
+.step-desc { font-size: 12px; color: var(--grey-500); margin-top: 2px; }
+.step-stats { text-align: right; }
+.step-duration { font-size: 12px; color: var(--grey-500); }
+.step-records { font-size: 13px; font-weight: 700; color: var(--grey-700); }
+
+.pipeline-connector {
+  width: 2px;
+  height: 16px;
+  background: var(--grey-300);
+  margin-left: 37px;
+}
+.pipeline-connector.complete { background: var(--green-500); }
+
+.pipeline-actions {
+  text-align: center;
+  margin-top: 24px;
+}
+
+/* ===== DASHBOARD CHARTS & MODERN GRAPHS ===== */
+.dash-charts-row {
+  display: grid;
+  gap: 16px;
+  width: 100%;
+}
+.dash-charts-row-1 {
+  grid-template-columns: 1fr 2fr;
+}
+.dash-charts-row-2 {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.chart-card {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  border: 1px solid var(--grey-200);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.chart-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--navy-500), #38bdf8, #a855f7);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.chart-card:hover {
+  box-shadow: var(--shadow-md);
+}
+.chart-card:hover::before {
+  opacity: 1;
+}
+.chart-container {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 230px;
+}
+.doughnut-center-label {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+.doughnut-percent {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--grey-900);
+  line-height: 1;
+}
+.doughnut-sub {
+  font-size: 11px;
+  color: var(--grey-500);
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1200px) {
+  .dash-top { grid-template-columns: repeat(3, 1fr); }
+  .dash-charts-row-1 { grid-template-columns: 1fr; }
+  .dash-charts-row-2 { grid-template-columns: 1fr 1fr; }
+  .dash-body { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 1000px) {
+  .dash-top { grid-template-columns: repeat(2, 1fr); }
+  .dash-charts-row-2 { grid-template-columns: 1fr; }
+  .dash-body { grid-template-columns: 1fr; }
+  .map-sidebar { width: 240px; }
+  #parcel-drawer { width: 320px; }
+  .data-top { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header id="app-header">
+  <div class="header-left">
+    <div>
+      <div class="brand">BHOOMI-X</div>
+      <div class="brand-sub">AI-Powered Geospatial Reconciliation & Harmonization</div>
+    </div>
+    <nav id="nav-tabs">
+      <button class="nav-tab active" data-tab="dashboard" id="nav-dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-tab" data-tab="map" id="nav-map">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+        Map
+      </button>
+      <button class="nav-tab" data-tab="conflicts" id="nav-conflicts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Conflicts
+        <span class="tab-badge" id="conflict-badge">5</span>
+      </button>
+      <button class="nav-tab" data-tab="data" id="nav-data">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        Data
+      </button>
+      <button class="nav-tab" data-tab="pipeline" id="nav-pipeline">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Pipeline
+      </button>
+    </nav>
+  </div>
+  <div class="header-right">
+    <span class="sih-badge">SIH 2026 • PS 26013</span>
+    <div class="user-avatar">AH</div>
+  </div>
+</header>
+
+<!-- ===== TOAST CONTAINER ===== -->
+<div id="toast-container"></div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div id="main-content">
+
+  <!-- ===== SCREEN: DASHBOARD ===== -->
+  <div id="screen-dashboard" class="screen active">
+    <div class="dash-top">
+      <div class="kpi-card kpi-parcels">
+        <div class="kpi-label">Total Parcels</div>
+        <div class="kpi-value" data-count="125">0</div>
+        <div class="kpi-trend neutral">● Pilot Area: Sector 17</div>
+      </div>
+      <div class="kpi-card kpi-harmonized">
+        <div class="kpi-label">Harmonized</div>
+        <div class="kpi-value" data-count="117">0</div>
+        <div class="kpi-trend up">↑ 93.6% match rate</div>
+      </div>
+      <div class="kpi-card kpi-confidence">
+        <div class="kpi-label">High Confidence</div>
+        <div class="kpi-value" data-count="102">0</div>
+        <div class="kpi-trend up">↑ ≥90% confidence</div>
+      </div>
+      <div class="kpi-card kpi-review">
+        <div class="kpi-label">Review Required</div>
+        <div class="kpi-value" data-count="6">0</div>
+        <div class="kpi-trend down">▼ Needs human review</div>
+      </div>
+      <div class="kpi-card kpi-conflicts">
+        <div class="kpi-label">Conflicts</div>
+        <div class="kpi-value" data-count="5">0</div>
+        <div class="kpi-trend down">▼ Active conflicts</div>
+      </div>
+      <div class="kpi-card kpi-changes">
+        <div class="kpi-label">Recent Changes</div>
+        <div class="kpi-value" data-count="3">0</div>
+        <div class="kpi-trend neutral">● Last 7 days</div>
+      </div>
+    </div>
+
+    <!-- Charts Row 1: Parcel Status Breakdown Doughnut + Harmonization Progress Line -->
+    <div class="dash-charts-row dash-charts-row-1">
+      <div class="chart-card">
+        <div class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10h-10z"/></svg>
+          Parcel Status Breakdown
+        </div>
+        <div class="chart-container" style="height:260px;">
+          <canvas id="chart-status-doughnut"></canvas>
+          <div class="doughnut-center-label">
+            <div class="doughnut-percent" id="doughnut-pct-val">94%</div>
+            <div class="doughnut-sub">Harmonized</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Harmonization Progress & Conflicts (7-Day Trend)
+        </div>
+        <div class="chart-container" style="height:260px;">
+          <canvas id="chart-progress-line"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row 2: Data Sources Bar + Confidence Distribution + Radar -->
+    <div class="dash-charts-row dash-charts-row-2">
+      <div class="chart-card">
+        <div class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="17" x2="8" y2="11"/><line x1="12" y1="17" x2="12" y2="7"/><line x1="16" y1="17" x2="16" y2="13"/></svg>
+          Data Sources Volume
+        </div>
+        <div class="chart-container" style="height:220px;">
+          <canvas id="chart-sources-bar"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Confidence Distribution
+        </div>
+        <div class="chart-container" style="height:220px;">
+          <canvas id="chart-confidence-bar"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/></svg>
+          Data Quality Metrics
+        </div>
+        <div class="chart-container" style="height:220px;">
+          <canvas id="chart-quality-radar"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-body">
+      <!-- Recent Activity -->
+      <div class="card">
+        <div class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Recent Activity
+        </div>
+        <div id="activity-feed">
+          <div class="activity-item"><div class="activity-dot" style="background:var(--green-500)"></div><div><div>Pipeline completed — 117 parcels harmonized</div><div class="activity-time">2 min ago</div></div></div>
+          <div class="activity-item"><div class="activity-dot" style="background:var(--red-500)"></div><div><div>Conflict detected: P-104 area mismatch (3.5%)</div><div class="activity-time">5 min ago</div></div></div>
+          <div class="activity-item"><div class="activity-dot" style="background:var(--amber-500)"></div><div><div>P-103 routed to review — boundary discrepancy</div><div class="activity-time">5 min ago</div></div></div>
+          <div class="activity-item"><div class="activity-dot" style="background:var(--blue-500)"></div><div><div>GNSS Survey dataset uploaded (89 records)</div><div class="activity-time">12 min ago</div></div></div>
+          <div class="activity-item"><div class="activity-dot" style="background:var(--green-500)"></div><div><div>CRS transformation complete → EPSG:4326</div><div class="activity-time">15 min ago</div></div></div>
+          <div class="activity-item"><div class="activity-dot" style="background:var(--blue-500)"></div><div><div>Cadastral Map loaded — 125 parcels ingested</div><div class="activity-time">20 min ago</div></div></div>
+        </div>
+      </div>
+
+      <!-- Data Sources -->
+      <div class="card">
+        <div class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          Data Sources
+        </div>
+        <div class="source-item"><div class="source-left"><div class="source-dot" style="background:#4c8bf5"></div><span>Cadastral Map</span></div><div class="source-count">125 records</div><span class="badge badge-green">✓ Loaded</span></div>
+        <div class="source-item"><div class="source-left"><div class="source-dot" style="background:#7b61ff"></div><span>Revenue Records</span></div><div class="source-count">118 records</div><span class="badge badge-green">✓ Loaded</span></div>
+        <div class="source-item"><div class="source-left"><div class="source-dot" style="background:#15a36d"></div><span>Municipal GIS</span></div><div class="source-count">122 records</div><span class="badge badge-green">✓ Loaded</span></div>
+        <div class="source-item"><div class="source-left"><div class="source-dot" style="background:#e5a900"></div><span>GNSS Survey</span></div><div class="source-count">89 records</div><span class="badge badge-green">✓ Loaded</span></div>
+        <div class="source-item"><div class="source-left"><div class="source-dot" style="background:#e66b3d"></div><span>Drone / ORI</span></div><div class="source-count">95 records</div><span class="badge badge-green">✓ Loaded</span></div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card">
+        <div class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Quick Actions
+        </div>
+        <div class="quick-actions">
+          <div class="quick-action-btn" onclick="switchTab('pipeline'); runPipeline();">
+            <div class="qa-icon">▶</div>
+            <div><div style="font-weight:700">Run Harmonization</div><div style="font-size:11px;color:inherit;opacity:0.7">Execute full reconciliation pipeline</div></div>
+          </div>
+          <div class="quick-action-btn" onclick="switchTab('data')">
+            <div class="qa-icon">↑</div>
+            <div><div style="font-weight:700">Upload Dataset</div><div style="font-size:11px;color:inherit;opacity:0.7">Add GeoJSON, CSV, or GeoTIFF</div></div>
+          </div>
+          <div class="quick-action-btn" onclick="switchTab('conflicts')">
+            <div class="qa-icon">⚠</div>
+            <div><div style="font-weight:700">Review Conflicts</div><div style="font-size:11px;color:inherit;opacity:0.7">5 conflicts pending review</div></div>
+          </div>
+          <div class="quick-action-btn" onclick="exportReport()">
+            <div class="qa-icon">↓</div>
+            <div><div style="font-weight:700">Export Report</div><div style="font-size:11px;color:inherit;opacity:0.7">Download harmonized records</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: MAP ===== -->
+  <div id="screen-map" class="screen">
+    <aside class="map-sidebar">
+      <div class="map-sidebar-section">
+        <input type="text" class="map-search" placeholder="Search parcel ID..." id="parcel-search" oninput="filterParcels(this.value)"/>
+      </div>
+
+      <div class="map-sidebar-section">
+        <div class="section-title" style="font-size:12px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          Layers
+        </div>
+        <div class="layer-toggle">
+          <label><div class="layer-dot" style="background:var(--green-500)"></div>Parcels</label>
+          <div class="toggle-switch"><input type="checkbox" checked onchange="toggleLayer('parcels',this.checked)"/><span class="toggle-slider"></span></div>
+        </div>
+        <div class="layer-toggle">
+          <label><div class="layer-dot" style="background:var(--grey-600)"></div>Buildings</label>
+          <div class="toggle-switch"><input type="checkbox" checked onchange="toggleLayer('buildings',this.checked)"/><span class="toggle-slider"></span></div>
+        </div>
+        <div class="layer-toggle">
+          <label><div class="layer-dot" style="background:var(--red-500)"></div>Conflicts</label>
+          <div class="toggle-switch"><input type="checkbox" checked onchange="toggleLayer('conflicts',this.checked)"/><span class="toggle-slider"></span></div>
+        </div>
+        <div class="layer-toggle">
+          <label><div class="layer-dot" style="background:var(--blue-500)"></div>Changes</label>
+          <div class="toggle-switch"><input type="checkbox" checked onchange="toggleLayer('changes',this.checked)"/><span class="toggle-slider"></span></div>
+        </div>
+      </div>
+
+      <div class="map-sidebar-section">
+        <div class="section-title" style="font-size:12px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Confidence Filter
+        </div>
+        <input type="range" class="confidence-slider" min="0" max="100" value="0" id="conf-slider" oninput="filterByConfidence(this.value)"/>
+        <div class="slider-labels"><span>0%</span><span id="conf-slider-val">Min: 0%</span><span>100%</span></div>
+      </div>
+
+      <div class="map-sidebar-section">
+        <div class="section-title" style="font-size:12px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Status Filter
+        </div>
+        <div class="status-filter">
+          <label class="status-check"><input type="checkbox" checked onchange="filterByStatus()"/> <span class="badge badge-green" style="font-size:10px">Validated</span></label>
+          <label class="status-check"><input type="checkbox" checked onchange="filterByStatus()"/> <span class="badge badge-amber" style="font-size:10px">Review</span></label>
+          <label class="status-check"><input type="checkbox" checked onchange="filterByStatus()"/> <span class="badge badge-red" style="font-size:10px">Conflict</span></label>
+          <label class="status-check"><input type="checkbox" checked onchange="filterByStatus()"/> <span class="badge badge-blue" style="font-size:10px">Changed</span></label>
+        </div>
+      </div>
+
+      <div class="map-sidebar-section" style="border-bottom:none; margin-top: auto;">
+        <div style="font-size:11px; color:var(--grey-400); text-align:center;">
+          Pilot Area: Chandigarh, Sector 17<br/>
+          CRS: EPSG:4326 (WGS 84)<br/>
+          <span style="color:var(--amber-500)">⚠ Synthetic demo data</span>
+        </div>
+      </div>
+    </aside>
+
+    <div class="map-container">
+      <div id="leaflet-map"></div>
+    </div>
+
+    <!-- Parcel Detail Drawer -->
+    <div id="parcel-drawer">
+      <div class="drawer-header">
+        <div>
+          <div class="drawer-parcel-id" id="drawer-pid">P-101</div>
+          <div style="margin-top:6px" id="drawer-status-badge"></div>
+        </div>
+        <button class="drawer-close" onclick="closeDrawer()">✕</button>
+      </div>
+
+      <div class="drawer-section" style="text-align:center">
+        <div class="conf-gauge">
+          <svg viewBox="0 0 120 120">
+            <circle class="conf-gauge-bg" cx="60" cy="60" r="50"/>
+            <circle class="conf-gauge-fill" id="gauge-fill" cx="60" cy="60" r="50" stroke-dasharray="314" stroke-dashoffset="314"/>
+          </svg>
+          <div class="conf-gauge-text">
+            <div class="conf-gauge-value" id="gauge-value">0%</div>
+            <div class="conf-gauge-label">Confidence</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="drawer-section">
+        <div class="drawer-section-title">Source Evidence</div>
+        <div class="source-evidence" id="drawer-sources"></div>
+      </div>
+
+      <div class="drawer-section">
+        <div class="drawer-section-title">Score Breakdown</div>
+        <div id="drawer-scores"></div>
+      </div>
+
+      <div class="drawer-section">
+        <div class="drawer-section-title">Evidence Details</div>
+        <div id="drawer-evidence" style="font-size:13px;"></div>
+      </div>
+
+      <div class="drawer-section">
+        <div class="drawer-section-title">AI Recommendation</div>
+        <div class="ai-recommendation" id="drawer-recommendation">
+          <div class="ai-rec-label">🤖 AI Analysis</div>
+          <span id="drawer-rec-text"></span>
+        </div>
+      </div>
+
+      <div class="drawer-actions">
+        <button class="btn btn-success" onclick="approveParcel()">✓ Accept</button>
+        <button class="btn btn-danger btn-sm" onclick="rejectParcel()">✗ Reject</button>
+        <button class="btn btn-ghost btn-sm" onclick="escalateParcel()">↑ Escalate</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: CONFLICTS ===== -->
+  <div id="screen-conflicts" class="screen">
+    <div class="conflict-header">
+      <div>
+        <h2 style="font-size:20px;font-weight:800">Conflict Review</h2>
+        <p style="font-size:13px;color:var(--grey-500);margin-top:2px">Review and resolve detected conflicts across data sources</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div class="conflict-stats">
+          <span class="conflict-stat" style="background:var(--red-100);color:var(--red-600)">5 Pending</span>
+          <span class="conflict-stat" style="background:var(--green-100);color:var(--green-600)">0 Resolved</span>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="exportConflicts()">↓ Export</button>
+      </div>
+    </div>
+    <div class="card conflict-table-wrap" style="flex:1;padding:0">
+      <table class="conflict-table" id="conflict-table">
+        <thead>
+          <tr>
+            <th onclick="sortConflicts('parcel')">Parcel ↕</th>
+            <th onclick="sortConflicts('type')">Conflict Type ↕</th>
+            <th onclick="sortConflicts('severity')">Severity ↕</th>
+            <th>Sources</th>
+            <th onclick="sortConflicts('confidence')">Confidence ↕</th>
+            <th>Recommended Action</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="conflict-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: DATA ===== -->
+  <div id="screen-data" class="screen">
+    <div>
+      <h2 style="font-size:20px;font-weight:800">Data Ingestion</h2>
+      <p style="font-size:13px;color:var(--grey-500);margin-top:2px">Upload and manage geospatial datasets for reconciliation</p>
+    </div>
+
+    <div class="data-top">
+      <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+        <div class="upload-zone" id="upload-zone"
+             ondragover="event.preventDefault();this.classList.add('dragover')"
+             ondragleave="this.classList.remove('dragover')"
+             ondrop="event.preventDefault();this.classList.remove('dragover');handleDrop(event)">
+          <div class="upload-icon">↑</div>
+          <div class="upload-title">Drop files here or click to upload</div>
+          <div class="upload-sub">Supports GeoJSON, CSV, GeoTIFF, Shapefile (zip)</div>
+          <div class="upload-formats">
+            <span class="format-tag">.geojson</span>
+            <span class="format-tag">.csv</span>
+            <span class="format-tag">.tiff</span>
+            <span class="format-tag">.zip (shp)</span>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="margin-top:16px" onclick="loadSampleData()">⚡ Load Sample Datasets</button>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Validation Summary</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="padding:14px;border-radius:var(--radius-sm);background:var(--green-50);text-align:center">
+            <div style="font-size:24px;font-weight:800;color:var(--green-600)" id="valid-count">5</div>
+            <div style="font-size:11px;color:var(--green-600);font-weight:600">Valid Datasets</div>
+          </div>
+          <div style="padding:14px;border-radius:var(--radius-sm);background:var(--amber-50);text-align:center">
+            <div style="font-size:24px;font-weight:800;color:var(--amber-600)" id="warning-count">0</div>
+            <div style="font-size:11px;color:var(--amber-600);font-weight:600">Warnings</div>
+          </div>
+          <div style="padding:14px;border-radius:var(--radius-sm);background:var(--red-50);text-align:center">
+            <div style="font-size:24px;font-weight:800;color:var(--red-600)" id="error-count">0</div>
+            <div style="font-size:11px;color:var(--red-600);font-weight:600">Errors</div>
+          </div>
+          <div style="padding:14px;border-radius:var(--radius-sm);background:var(--grey-50);text-align:center">
+            <div style="font-size:24px;font-weight:800;color:var(--grey-700)" id="total-records">549</div>
+            <div style="font-size:11px;color:var(--grey-600);font-weight:600">Total Records</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="flex:1">
+      <div class="section-title" style="justify-content:space-between">
+        <span style="display:flex;align-items:center;gap:8px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--navy-500)" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          Loaded Datasets
+        </span>
+        <span class="badge badge-blue" id="dataset-count-badge">5 datasets</span>
+      </div>
+      <div class="datasets-list" id="datasets-list"></div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: PIPELINE ===== -->
+  <div id="screen-pipeline" class="screen">
+    <div class="pipeline-container">
+      <div class="pipeline-header">
+        <h2>Harmonization Pipeline</h2>
+        <p>AI recommends · GIS computes · Authorized humans verify</p>
+      </div>
+
+      <div class="pipeline-steps" id="pipeline-steps"></div>
+
+      <div class="pipeline-actions">
+        <button class="btn btn-primary" id="run-pipeline-btn" onclick="runPipeline()" style="padding:14px 32px;font-size:15px">
+          ▶ Run Full Pipeline
+        </button>
+        <button class="btn btn-ghost" onclick="resetPipeline()" style="margin-left:8px">Reset</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============================================
+// SYNTHETIC DEMO DATA
+// ============================================
+
+// Chandigarh Sector 17 center: 30.7415°N, 76.7792°E
+const CENTER = [30.7415, 76.7792];
+
+const PARCELS = [
+  { id:'P-101', status:'validated',  confidence:97, area:850,  landUse:'Commercial',  owner:'Municipal Corp.',
+    coords:[[30.7440,76.7760],[30.7440,76.7775],[30.7430,76.7775],[30.7430,76.7760]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:true},
+    spatial:98,attribute:96,sourceAgree:97,
+    areaCad:850,areaRev:850,areaGnss:852,areaDrone:855,
+    rec:'All sources are in strong agreement. Parcel validated with high confidence.' },
+  { id:'P-102', status:'validated', confidence:95, area:1200, landUse:'Commercial',  owner:'State Govt.',
+    coords:[[30.7440,76.7780],[30.7440,76.7798],[30.7430,76.7798],[30.7430,76.7780]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:false},
+    spatial:96,attribute:94,sourceAgree:93,
+    areaCad:1200,areaRev:1200,areaGnss:1205,areaDrone:null,
+    rec:'Good multi-source agreement. Drone imagery not available for this parcel.' },
+  { id:'P-103', status:'review', confidence:74, area:960, landUse:'Mixed Use', owner:'Private',
+    coords:[[30.7440,76.7802],[30.7440,76.7818],[30.7430,76.7818],[30.7430,76.7802]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:true},
+    spatial:82,attribute:71,sourceAgree:68,
+    areaCad:960,areaRev:940,areaGnss:975,areaDrone:982,
+    rec:'Boundary discrepancy detected between cadastral and GNSS data. Revenue records show 2.1% area difference. Recommend field verification.' },
+  { id:'P-104', status:'conflict', confidence:58, area:1000, landUse:'Residential', owner:'Private',
+    coords:[[30.7425,76.7760],[30.7425,76.7780],[30.7415,76.7780],[30.7415,76.7760]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:true},
+    spatial:65,attribute:52,sourceAgree:48,
+    areaCad:1000,areaRev:1000,areaGnss:1008,areaDrone:1035,
+    rec:'Significant area mismatch: Drone imagery estimates 3.5% larger area than cadastral records. Multiple boundary vertices differ across sources. Human verification required.' },
+  { id:'P-105', status:'validated', confidence:99, area:700, landUse:'Commercial', owner:'Municipal Corp.',
+    coords:[[30.7425,76.7785],[30.7425,76.7800],[30.7415,76.7800],[30.7415,76.7785]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:true},
+    spatial:99,attribute:99,sourceAgree:100,
+    areaCad:700,areaRev:700,areaGnss:700,areaDrone:702,
+    rec:'Perfect source agreement across all datasets. Highest confidence rating.' },
+  { id:'P-106', status:'validated', confidence:93, area:1100, landUse:'Commercial', owner:'Private',
+    coords:[[30.7425,76.7805],[30.7425,76.7822],[30.7415,76.7822],[30.7415,76.7805]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:false,drone:true},
+    spatial:95,attribute:92,sourceAgree:90,
+    areaCad:1100,areaRev:1098,areaGnss:null,areaDrone:1105,
+    rec:'Good correspondence. GNSS survey data not available for this parcel.' },
+  { id:'P-107', status:'conflict', confidence:45, area:1400, landUse:'Institutional', owner:'State Govt.',
+    coords:[[30.7413,76.7760],[30.7413,76.7782],[30.7403,76.7782],[30.7403,76.7760]],
+    sources:{cadastral:true,revenue:false,municipal:true,gnss:true,drone:true},
+    spatial:55,attribute:38,sourceAgree:35,
+    areaCad:1400,areaRev:null,areaGnss:1490,areaDrone:1520,
+    rec:'CRITICAL: Missing revenue records. Drone estimate 8.6% larger than cadastral. Possible encroachment or outdated cadastral boundary. Immediate field survey recommended.' },
+  { id:'P-108', status:'review', confidence:72, area:550, landUse:'Residential', owner:'Private',
+    coords:[[30.7413,76.7788],[30.7413,76.7800],[30.7403,76.7800],[30.7403,76.7788]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:false},
+    spatial:80,attribute:68,sourceAgree:65,
+    areaCad:550,areaRev:545,areaGnss:560,areaDrone:null,
+    rec:'Moderate discrepancy in area measurements. Cadastral and GNSS boundaries diverge at SE corner. Review recommended.' },
+  { id:'P-109', status:'validated', confidence:91, area:800, landUse:'Commercial', owner:'Private',
+    coords:[[30.7413,76.7805],[30.7413,76.7820],[30.7403,76.7820],[30.7403,76.7805]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:true},
+    spatial:93,attribute:90,sourceAgree:89,
+    areaCad:800,areaRev:800,areaGnss:805,areaDrone:808,
+    rec:'Good overall agreement. Minor area variance within acceptable tolerance.' },
+  { id:'P-110', status:'changed', confidence:88, area:650, landUse:'Commercial', owner:'Municipal Corp.',
+    coords:[[30.7400,76.7768],[30.7400,76.7782],[30.7392,76.7782],[30.7392,76.7768]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:true},
+    spatial:90,attribute:87,sourceAgree:85,
+    areaCad:650,areaRev:620,areaGnss:650,areaDrone:652,
+    rec:'Land use change detected: Revenue records show previous classification as "Vacant". Current drone imagery confirms commercial structures. Temporal change documented.' },
+  { id:'P-111', status:'validated', confidence:96, area:900, landUse:'Residential', owner:'Private',
+    coords:[[30.7400,76.7786],[30.7400,76.7800],[30.7392,76.7800],[30.7392,76.7786]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:true},
+    spatial:97,attribute:95,sourceAgree:96,
+    areaCad:900,areaRev:900,areaGnss:902,areaDrone:903,
+    rec:'All sources agree. Validated with high confidence.' },
+  { id:'P-112', status:'conflict', confidence:52, area:1300, landUse:'Residential', owner:'Private',
+    coords:[[30.7400,76.7804],[30.7400,76.7822],[30.7392,76.7822],[30.7392,76.7804]],
+    sources:{cadastral:true,revenue:true,municipal:false,gnss:true,drone:true},
+    spatial:60,attribute:45,sourceAgree:42,
+    areaCad:1300,areaRev:1250,areaGnss:1340,areaDrone:1360,
+    rec:'Missing municipal GIS record. Revenue shows 50m² less than cadastral. Drone estimates 4.6% larger. Possible subdivision not recorded. Urgent review needed.' },
+  { id:'P-113', status:'review', confidence:69, area:780, landUse:'Mixed Use', owner:'Private',
+    coords:[[30.7390,76.7762],[30.7390,76.7776],[30.7382,76.7776],[30.7382,76.7762]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:false,drone:true},
+    spatial:75,attribute:66,sourceAgree:62,
+    areaCad:780,areaRev:770,areaGnss:null,areaDrone:795,
+    rec:'Land use classification conflict: Cadastral shows "Mixed Use", Revenue shows "Residential". Area measurements moderately divergent.' },
+  { id:'P-114', status:'validated', confidence:94, area:1050, landUse:'Commercial', owner:'Municipal Corp.',
+    coords:[[30.7390,76.7780],[30.7390,76.7798],[30.7382,76.7798],[30.7382,76.7780]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:true},
+    spatial:96,attribute:93,sourceAgree:92,
+    areaCad:1050,areaRev:1050,areaGnss:1055,areaDrone:1058,
+    rec:'Strong multi-source agreement. Minor variance in area within tolerance.' },
+  { id:'P-115', status:'changed', confidence:85, area:500, landUse:'Residential', owner:'Private',
+    coords:[[30.7390,76.7802],[30.7390,76.7812],[30.7382,76.7812],[30.7382,76.7802]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:true},
+    spatial:88,attribute:83,sourceAgree:82,
+    areaCad:500,areaRev:500,areaGnss:505,areaDrone:510,
+    rec:'Boundary change detected: Recent GNSS survey shows 2m shift in eastern boundary compared to 2020 cadastral. Consistent with approved boundary adjustment.' },
+  { id:'P-116', status:'validated', confidence:98, area:1500, landUse:'Institutional', owner:'State Govt.',
+    coords:[[30.7390,76.7815],[30.7390,76.7838],[30.7380,76.7838],[30.7380,76.7815]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:true},
+    spatial:99,attribute:97,sourceAgree:98,
+    areaCad:1500,areaRev:1500,areaGnss:1502,areaDrone:1505,
+    rec:'Institutional parcel with excellent source agreement. All measurements within 0.3% tolerance.' },
+  { id:'P-117', status:'review', confidence:68, area:620, landUse:'Residential', owner:'Private',
+    coords:[[30.7448,76.7765],[30.7448,76.7778],[30.7442,76.7778],[30.7442,76.7765]],
+    sources:{cadastral:true,revenue:true,municipal:false,gnss:true,drone:true},
+    spatial:74,attribute:65,sourceAgree:60,
+    areaCad:620,areaRev:610,areaGnss:630,areaDrone:640,
+    rec:'Municipal GIS record missing. Moderate area variance (3.2% range). Recommend cross-referencing with building permit records.' },
+  { id:'P-118', status:'validated', confidence:92, area:880, landUse:'Commercial', owner:'Private',
+    coords:[[30.7448,76.7782],[30.7448,76.7798],[30.7442,76.7798],[30.7442,76.7782]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:true},
+    spatial:94,attribute:91,sourceAgree:90,
+    areaCad:880,areaRev:880,areaGnss:885,areaDrone:888,
+    rec:'Good agreement across all five data sources. Validated.' },
+  { id:'P-119', status:'conflict', confidence:50, area:1150, landUse:'Commercial', owner:'Disputed',
+    coords:[[30.7448,76.7802],[30.7448,76.7820],[30.7442,76.7820],[30.7442,76.7802]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:true},
+    spatial:58,attribute:42,sourceAgree:40,
+    areaCad:1150,areaRev:1080,areaGnss:1200,areaDrone:1210,
+    rec:'CRITICAL: Owner field shows "Disputed" in revenue records. Area measurements diverge significantly (up to 12% range). Duplicate parcel IDs found in municipal records. Legal review recommended.' },
+  { id:'P-120', status:'validated', confidence:90, area:750, landUse:'Residential', owner:'Private',
+    coords:[[30.7378,76.7768],[30.7378,76.7782],[30.7370,76.7782],[30.7370,76.7768]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:false},
+    spatial:92,attribute:89,sourceAgree:88,
+    areaCad:750,areaRev:750,areaGnss:755,areaDrone:null,
+    rec:'Good agreement among available sources. Drone data pending.' },
+  { id:'P-121', status:'changed', confidence:86, area:950, landUse:'Commercial', owner:'Private',
+    coords:[[30.7378,76.7786],[30.7378,76.7802],[30.7370,76.7802],[30.7370,76.7786]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:true},
+    spatial:89,attribute:84,sourceAgree:83,
+    areaCad:950,areaRev:920,areaGnss:955,areaDrone:960,
+    rec:'Historical comparison shows land use changed from "Vacant Land" to "Commercial" between 2022–2024. Revenue record area not yet updated.' },
+  { id:'P-122', status:'review', confidence:71, area:680, landUse:'Residential', owner:'Private',
+    coords:[[30.7378,76.7806],[30.7378,76.7818],[30.7370,76.7818],[30.7370,76.7806]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:true},
+    spatial:78,attribute:67,sourceAgree:64,
+    areaCad:680,areaRev:680,areaGnss:700,areaDrone:710,
+    rec:'GNSS and drone measurements suggest actual area is 4.4% larger than cadastral record. Possible informal extension. Field verification recommended.' },
+  { id:'P-123', status:'validated', confidence:96, area:1100, landUse:'Institutional', owner:'Municipal Corp.',
+    coords:[[30.7378,76.7822],[30.7378,76.7840],[30.7370,76.7840],[30.7370,76.7822]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:true},
+    spatial:97,attribute:95,sourceAgree:96,
+    areaCad:1100,areaRev:1100,areaGnss:1102,areaDrone:1105,
+    rec:'Institutional parcel with strong multi-source validation. Fully harmonized.' },
+  { id:'P-124', status:'conflict', confidence:47, area:820, landUse:'Residential', owner:'Private',
+    coords:[[30.7368,76.7775],[30.7368,76.7790],[30.7360,76.7790],[30.7360,76.7775]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:true},
+    spatial:54,attribute:40,sourceAgree:38,
+    areaCad:820,areaRev:780,areaGnss:860,areaDrone:870,
+    rec:'CRITICAL: Cadastral and revenue boundaries do not align. GNSS survey shows additional 40m² not in cadastral. Building footprint from drone partially extends beyond recorded parcel. Possible unauthorized construction. Escalate to survey team.' },
+  { id:'P-125', status:'validated', confidence:94, area:600, landUse:'Commercial', owner:'Private',
+    coords:[[30.7368,76.7795],[30.7368,76.7808],[30.7360,76.7808],[30.7360,76.7795]],
+    sources:{cadastral:true,revenue:true,municipal:true,gnss:true,drone:true},
+    spatial:96,attribute:93,sourceAgree:92,
+    areaCad:600,areaRev:600,areaGnss:603,areaDrone:605,
+    rec:'Validated. All sources within tolerance. No action needed.' }
+];
+
+const BUILDINGS = [
+  { coords:[[30.7437,76.7764],[30.7437,76.7769],[30.7433,76.7769],[30.7433,76.7764]] },
+  { coords:[[30.7436,76.7785],[30.7436,76.7792],[30.7433,76.7792],[30.7433,76.7785]] },
+  { coords:[[30.7436,76.7808],[30.7436,76.7813],[30.7433,76.7813],[30.7433,76.7808]] },
+  { coords:[[30.7422,76.7764],[30.7422,76.7772],[30.7418,76.7772],[30.7418,76.7764]] },
+  { coords:[[30.7420,76.7790],[30.7420,76.7796],[30.7417,76.7796],[30.7417,76.7790]] },
+  { coords:[[30.7420,76.7810],[30.7420,76.7816],[30.7416,76.7816],[30.7416,76.7810]] },
+  { coords:[[30.7409,76.7770],[30.7409,76.7777],[30.7405,76.7777],[30.7405,76.7770]] },
+  { coords:[[30.7408,76.7792],[30.7408,76.7797],[30.7405,76.7797],[30.7405,76.7792]] },
+  { coords:[[30.7397,76.7772],[30.7397,76.7778],[30.7394,76.7778],[30.7394,76.7772]] },
+  { coords:[[30.7396,76.7808],[30.7396,76.7815],[30.7393,76.7815],[30.7393,76.7808]] },
+  { coords:[[30.7387,76.7768],[30.7387,76.7773],[30.7384,76.7773],[30.7384,76.7768]] },
+  { coords:[[30.7386,76.7788],[30.7386,76.7794],[30.7383,76.7794],[30.7383,76.7788]] },
+  { coords:[[30.7375,76.7778],[30.7375,76.7785],[30.7372,76.7785],[30.7372,76.7778]] },
+  { coords:[[30.7375,76.7798],[30.7375,76.7803],[30.7372,76.7803],[30.7372,76.7798]] },
+  { coords:[[30.7365,76.7780],[30.7365,76.7786],[30.7362,76.7786],[30.7362,76.7780]] },
+];
+
+const CONFLICTS = [
+  { parcel:'P-104', type:'Area Mismatch', severity:'High', sources:'Cadastral vs Drone', confidence:58, action:'Field survey to verify boundary', status:'Pending' },
+  { parcel:'P-107', type:'Missing Record', severity:'High', sources:'Revenue (absent)', confidence:45, action:'Request revenue dept. records', status:'Pending' },
+  { parcel:'P-112', type:'Boundary Mismatch', severity:'High', sources:'Cadastral vs GNSS vs Drone', confidence:52, action:'Resurvey with DGPS', status:'Pending' },
+  { parcel:'P-119', type:'Ownership Dispute', severity:'High', sources:'All sources', confidence:50, action:'Legal review and title verification', status:'Pending' },
+  { parcel:'P-124', type:'Encroachment', severity:'High', sources:'GNSS + Drone vs Cadastral', confidence:47, action:'Site inspection and NOC verification', status:'Pending' },
+];
+
+const DATASETS = [
+  { name:'Cadastral Map', type:'GeoJSON', crs:'EPSG:32643', records:125, size:'2.4 MB', status:'valid', color:'#4c8bf5', icon:'🗺️' },
+  { name:'Revenue Records', type:'CSV', crs:'N/A (tabular)', records:118, size:'340 KB', status:'valid', color:'#7b61ff', icon:'📄' },
+  { name:'Municipal GIS', type:'GeoJSON', crs:'EPSG:4326', records:122, size:'3.1 MB', status:'valid', color:'#15a36d', icon:'🏛️' },
+  { name:'GNSS Survey', type:'CSV + GeoJSON', crs:'EPSG:4326', records:89, size:'1.8 MB', status:'valid', color:'#e5a900', icon:'📡' },
+  { name:'Drone / ORI', type:'GeoTIFF + GeoJSON', crs:'EPSG:32643', records:95, size:'45 MB', status:'valid', color:'#e66b3d', icon:'🛩️' },
+];
+
+const PIPELINE_STEPS = [
+  { name:'Data Ingestion', desc:'Loading and parsing source datasets', records:'549 records', duration:'1.2s' },
+  { name:'CRS Detection & Transformation', desc:'Detecting and normalizing coordinate reference systems to EPSG:4326', records:'549 records', duration:'0.8s' },
+  { name:'Geometry Validation', desc:'Checking topology, self-intersections, and invalid geometries', records:'546 valid', duration:'1.5s' },
+  { name:'Spatial Matching', desc:'Generating candidate matches via spatial overlap and proximity', records:'125 parcels → 312 candidates', duration:'2.3s' },
+  { name:'Attribute Mapping', desc:'Comparing identifiers, owner fields, area, land use across sources', records:'312 candidates scored', duration:'1.1s' },
+  { name:'Conflict & Change Detection', desc:'Flagging area mismatch, boundary issues, missing records, changes', records:'5 conflicts, 3 changes', duration:'0.9s' },
+  { name:'Confidence Scoring', desc:'Computing weighted composite scores with evidence factors', records:'125 parcels scored', duration:'0.4s' },
+  { name:'Human Review Routing', desc:'Routing low-confidence and high-impact cases to review queue', records:'6 → review, 5 → conflict', duration:'0.2s' },
+];
+
+
+// ============================================
+// APP STATE
+// ============================================
+let map, parcelLayer, buildingLayer, selectedParcel = null;
+let pipelineRunning = false;
+
+// ============================================
+// NAVIGATION
+// ============================================
+function switchTab(tabName) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+  document.getElementById(`screen-${tabName}`).classList.add('active');
+
+  if (tabName === 'dashboard') {
+    initCharts();
+  } else if (tabName === 'map' && !map) {
+    setTimeout(initMap, 50);
+  } else if (tabName === 'map' && map) {
+    setTimeout(() => map.invalidateSize(), 50);
+  }
+}
+
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+});
+
+// ============================================
+// TOAST
+// ============================================
+function showToast(msg, type = 'info') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  const icons = { success: '✓', warning: '⚠', error: '✗', info: 'ℹ' };
+  toast.innerHTML = `<span>${icons[type] || 'ℹ'}</span> ${msg}`;
+  container.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(30px)'; toast.style.transition = '0.3s ease'; }, 3500);
+  setTimeout(() => toast.remove(), 3900);
+}
+
+// ============================================
+// DASHBOARD — ANIMATED COUNTERS
+// ============================================
+function animateCounters() {
+  document.querySelectorAll('.kpi-value[data-count]').forEach(el => {
+    const target = parseInt(el.dataset.count);
+    const duration = 1200;
+    const startTime = performance.now();
+    function tick(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(target * eased);
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+}
+
+// ============================================
+// MAP INITIALIZATION
+// ============================================
+function initMap() {
+  map = L.map('leaflet-map', { zoomControl: true, attributionControl: true }).setView(CENTER, 16);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors | BHOOMI-X Prototype',
+    maxZoom: 19
+  }).addTo(map);
+
+  // Building layer
+  buildingLayer = L.layerGroup();
+  BUILDINGS.forEach(b => {
+    L.polygon(b.coords, {
+      color: '#475569',
+      fillColor: '#64748b',
+      fillOpacity: 0.7,
+      weight: 2
+    }).addTo(buildingLayer);
+  });
+  buildingLayer.addTo(map);
+
+  // Parcel layer
+  parcelLayer = L.layerGroup();
+  renderParcels(PARCELS);
+  parcelLayer.addTo(map);
+}
+
+const STATUS_STYLES = {
+  validated: { color: '#0d9448', fillColor: '#34d27b', fillOpacity: 0.2, weight: 3 },
+  review:    { color: '#b87a00', fillColor: '#ffc933', fillOpacity: 0.2, weight: 3, dashArray: '6 4' },
+  conflict:  { color: '#c42b2b', fillColor: '#f06b68', fillOpacity: 0.25, weight: 3, dashArray: '3 3' },
+  changed:   { color: '#3b82f6', fillColor: '#60a5fa', fillOpacity: 0.2, weight: 3, dashArray: '8 4' }
+};
+
+function renderParcels(parcels) {
+  parcelLayer.clearLayers();
+  parcels.forEach(p => {
+    const style = STATUS_STYLES[p.status] || STATUS_STYLES.validated;
+    const poly = L.polygon(p.coords, style);
+    poly.bindTooltip(`<b>${p.id}</b><br/>${p.confidence}% confidence`, { sticky: true, className: 'parcel-tooltip' });
+    poly.on('click', () => openDrawer(p));
+    poly.parcelData = p;
+    parcelLayer.addLayer(poly);
+  });
+}
+
+// ============================================
+// LAYER TOGGLES & FILTERS
+// ============================================
+function toggleLayer(name, visible) {
+  if (!map) return;
+  if (name === 'parcels') visible ? parcelLayer.addTo(map) : map.removeLayer(parcelLayer);
+  if (name === 'buildings') visible ? buildingLayer.addTo(map) : map.removeLayer(buildingLayer);
+  if (name === 'conflicts' || name === 'changes') {
+    // filter from parcel layer
+    filterAndRender();
+  }
+}
+
+function filterParcels(query) {
+  if (!map) return;
+  const q = query.toLowerCase().trim();
+  const filtered = q ? PARCELS.filter(p => p.id.toLowerCase().includes(q)) : PARCELS;
+  renderParcels(filtered);
+}
+
+function filterByConfidence(val) {
+  document.getElementById('conf-slider-val').textContent = `Min: ${val}%`;
+  filterAndRender();
+}
+
+function filterByStatus() {
+  filterAndRender();
+}
+
+function filterAndRender() {
+  const minConf = parseInt(document.getElementById('conf-slider').value);
+  const checks = document.querySelectorAll('.status-check input');
+  const statusMap = ['validated', 'review', 'conflict', 'changed'];
+  const allowed = [];
+  checks.forEach((c, i) => { if (c.checked) allowed.push(statusMap[i]); });
+
+  const filtered = PARCELS.filter(p => p.confidence >= minConf && allowed.includes(p.status));
+  renderParcels(filtered);
+}
+
+// ============================================
+// PARCEL DETAIL DRAWER
+// ============================================
+function openDrawer(parcel) {
+  selectedParcel = parcel;
+  const drawer = document.getElementById('parcel-drawer');
+  drawer.classList.add('open');
+  drawer.style.display = 'block';
+
+  document.getElementById('drawer-pid').textContent = parcel.id;
+
+  const statusLabels = {
+    validated: '<span class="badge badge-green">✓ VALIDATED</span>',
+    review: '<span class="badge badge-amber">⏳ REVIEW REQUIRED</span>',
+    conflict: '<span class="badge badge-red">⚠ CONFLICT</span>',
+    changed: '<span class="badge badge-blue">Δ CHANGED</span>'
+  };
+  document.getElementById('drawer-status-badge').innerHTML = statusLabels[parcel.status] || '';
+
+  // Confidence gauge
+  const circumference = 314;
+  const offset = circumference - (parcel.confidence / 100) * circumference;
+  const gaugeFill = document.getElementById('gauge-fill');
+  const gaugeColor = parcel.confidence >= 90 ? 'var(--green-500)' : parcel.confidence >= 70 ? 'var(--amber-500)' : 'var(--red-500)';
+  gaugeFill.style.stroke = gaugeColor;
+  gaugeFill.style.strokeDashoffset = circumference;
+  setTimeout(() => { gaugeFill.style.strokeDashoffset = offset; }, 50);
+  document.getElementById('gauge-value').textContent = parcel.confidence + '%';
+  document.getElementById('gauge-value').style.color = gaugeColor.replace('var(', '').replace(')', '');
+
+  // Source Evidence
+  const srcNames = { cadastral: 'Cadastral', revenue: 'Revenue', municipal: 'Municipal', gnss: 'GNSS', drone: 'Drone/ORI' };
+  let srcHTML = '';
+  for (const [key, val] of Object.entries(parcel.sources)) {
+    srcHTML += `<div class="source-ev-item"><span class="source-ev-icon">${val ? '✅' : '❌'}</span>${srcNames[key]}</div>`;
+  }
+  document.getElementById('drawer-sources').innerHTML = srcHTML;
+
+  // Score Bars
+  const scores = [
+    { label: 'Spatial', value: parcel.spatial, color: 'var(--navy-500)' },
+    { label: 'Attribute', value: parcel.attribute, color: '#6366f1' },
+    { label: 'Source Agree', value: parcel.sourceAgree, color: 'var(--green-500)' }
+  ];
+  let scoreHTML = '';
+  scores.forEach(s => {
+    scoreHTML += `<div class="score-bar-row">
+      <div class="score-bar-label">${s.label}</div>
+      <div class="score-bar-track"><div class="score-bar-fill" style="width:${s.value}%;background:${s.color}"></div></div>
+      <div class="score-bar-value">${s.value}%</div>
+    </div>`;
+  });
+  document.getElementById('drawer-scores').innerHTML = scoreHTML;
+
+  // Evidence Details
+  let evHTML = `<table style="width:100%;font-size:12px;border-collapse:collapse">`;
+  evHTML += `<tr><td style="padding:6px 0;color:var(--grey-500)">Cadastral Area</td><td style="padding:6px 0;font-weight:700;text-align:right">${parcel.areaCad} m²</td></tr>`;
+  evHTML += `<tr><td style="padding:6px 0;color:var(--grey-500)">Revenue Area</td><td style="padding:6px 0;font-weight:700;text-align:right">${parcel.areaRev !== null ? parcel.areaRev + ' m²' : '—'}</td></tr>`;
+  evHTML += `<tr><td style="padding:6px 0;color:var(--grey-500)">GNSS Area</td><td style="padding:6px 0;font-weight:700;text-align:right">${parcel.areaGnss !== null ? parcel.areaGnss + ' m²' : '—'}</td></tr>`;
+  evHTML += `<tr><td style="padding:6px 0;color:var(--grey-500)">Drone Estimate</td><td style="padding:6px 0;font-weight:700;text-align:right">${parcel.areaDrone !== null ? parcel.areaDrone + ' m²' : '—'}</td></tr>`;
+  evHTML += `<tr><td style="padding:6px 0;color:var(--grey-500)">Land Use</td><td style="padding:6px 0;font-weight:700;text-align:right">${parcel.landUse}</td></tr>`;
+  evHTML += `<tr><td style="padding:6px 0;color:var(--grey-500)">Owner</td><td style="padding:6px 0;font-weight:700;text-align:right">${parcel.owner}</td></tr>`;
+  evHTML += `</table>`;
+  document.getElementById('drawer-evidence').innerHTML = evHTML;
+
+  // Recommendation
+  document.getElementById('drawer-rec-text').textContent = parcel.rec;
+
+  // Highlight on map
+  if (map) {
+    map.flyTo([
+      (parcel.coords[0][0] + parcel.coords[2][0]) / 2,
+      (parcel.coords[0][1] + parcel.coords[2][1]) / 2
+    ], 17, { duration: 0.5 });
+  }
+}
+
+function closeDrawer() {
+  document.getElementById('parcel-drawer').classList.remove('open');
+  document.getElementById('parcel-drawer').style.display = 'none';
+  selectedParcel = null;
+}
+
+function approveParcel() {
+  if (!selectedParcel) return;
+  showToast(`${selectedParcel.id}: Reviewer approval recorded in audit trail.`, 'success');
+  closeDrawer();
+}
+function rejectParcel() {
+  if (!selectedParcel) return;
+  showToast(`${selectedParcel.id}: Routed to review queue for further investigation.`, 'warning');
+  closeDrawer();
+}
+function escalateParcel() {
+  if (!selectedParcel) return;
+  showToast(`${selectedParcel.id}: Escalated to senior reviewer with full evidence package.`, 'info');
+  closeDrawer();
+}
+
+// ============================================
+// CONFLICT TABLE
+// ============================================
+function renderConflicts() {
+  const tbody = document.getElementById('conflict-tbody');
+  tbody.innerHTML = '';
+  CONFLICTS.forEach((c, i) => {
+    const sevClass = c.severity === 'High' ? 'severity-high' : c.severity === 'Medium' ? 'severity-medium' : 'severity-low';
+    const statusBadge = c.status === 'Pending' ? '<span class="badge badge-amber">Pending</span>'
+                      : c.status === 'Accepted' ? '<span class="badge badge-green">Accepted</span>'
+                      : c.status === 'Rejected' ? '<span class="badge badge-red">Rejected</span>'
+                      : '<span class="badge badge-blue">Escalated</span>';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="font-weight:700">${c.parcel}</td>
+      <td>${c.type}</td>
+      <td class="${sevClass}">${c.severity}</td>
+      <td style="font-size:11px">${c.sources}</td>
+      <td><span class="conf-score" style="color:${c.confidence>=70?'var(--amber-600)':'var(--red-600)'}">${c.confidence}%</span></td>
+      <td style="font-size:12px">${c.action}</td>
+      <td>${statusBadge}</td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-success btn-sm" onclick="resolveConflict(${i},'Accepted')">✓</button>
+          <button class="btn btn-danger btn-sm" onclick="resolveConflict(${i},'Rejected')">✗</button>
+          <button class="btn btn-ghost btn-sm" onclick="resolveConflict(${i},'Escalated')">↑</button>
+        </div>
+      </td>`;
+    tr.addEventListener('dblclick', () => {
+      const p = PARCELS.find(pp => pp.id === c.parcel);
+      if (p) { switchTab('map'); setTimeout(() => openDrawer(p), 300); }
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+function resolveConflict(idx, status) {
+  CONFLICTS[idx].status = status;
+  renderConflicts();
+  const msgs = { Accepted: 'accepted', Rejected: 'rejected', Escalated: 'escalated' };
+  showToast(`${CONFLICTS[idx].parcel} conflict ${msgs[status]}. Action recorded in audit trail.`, status === 'Accepted' ? 'success' : status === 'Rejected' ? 'warning' : 'info');
+  updateConflictBadge();
+}
+
+function updateConflictBadge() {
+  const pending = CONFLICTS.filter(c => c.status === 'Pending').length;
+  document.getElementById('conflict-badge').textContent = pending;
+}
+
+let conflictSortField = null;
+let conflictSortAsc = true;
+function sortConflicts(field) {
+  if (conflictSortField === field) conflictSortAsc = !conflictSortAsc;
+  else { conflictSortField = field; conflictSortAsc = true; }
+  const dir = conflictSortAsc ? 1 : -1;
+  CONFLICTS.sort((a, b) => {
+    if (field === 'confidence') return (a.confidence - b.confidence) * dir;
+    return (a[field] || '').localeCompare(b[field] || '') * dir;
+  });
+  renderConflicts();
+}
+
+function exportConflicts() {
+  showToast('Conflict report exported as CSV.', 'success');
+}
+
+// ============================================
+// DATA INGESTION
+// ============================================
+function renderDatasets() {
+  const list = document.getElementById('datasets-list');
+  list.innerHTML = '';
+  DATASETS.forEach(d => {
+    const statusBadge = d.status === 'valid' ? '<span class="badge badge-green">✓ Valid</span>'
+                      : d.status === 'warning' ? '<span class="badge badge-amber">⚠ Warning</span>'
+                      : '<span class="badge badge-red">✗ Error</span>';
+    list.innerHTML += `
+      <div class="dataset-item">
+        <div class="dataset-left">
+          <div class="dataset-icon" style="background:${d.color}20;color:${d.color}">${d.icon}</div>
+          <div>
+            <div class="dataset-name">${d.name}</div>
+            <div class="dataset-meta">
+              <span>${d.type}</span>
+              <span>•</span>
+              <span>${d.crs}</span>
+              <span>•</span>
+              <span>${d.records} records</span>
+              <span>•</span>
+              <span>${d.size}</span>
+            </div>
+          </div>
+        </div>
+        <div class="dataset-right">
+          ${statusBadge}
+        </div>
+      </div>`;
+  });
+}
+
+function handleDrop(e) {
+  showToast('Prototype: File upload simulated. In production, files would be validated and ingested.', 'info');
+}
+
+function loadSampleData() {
+  showToast('Sample datasets loaded: Cadastral Map, Revenue Records, Municipal GIS, GNSS Survey, Drone/ORI', 'success');
+}
+
+// ============================================
+// PIPELINE
+// ============================================
+function renderPipeline(activeStep = -1) {
+  const container = document.getElementById('pipeline-steps');
+  container.innerHTML = '';
+  PIPELINE_STEPS.forEach((step, i) => {
+    if (i > 0) {
+      const connector = document.createElement('div');
+      connector.className = `pipeline-connector${i <= activeStep ? ' complete' : ''}`;
+      container.appendChild(connector);
+    }
+    const stepEl = document.createElement('div');
+    stepEl.className = `pipeline-step${i < activeStep ? ' complete' : i === activeStep ? ' running' : ''}`;
+    stepEl.innerHTML = `
+      <div class="step-number">${i < activeStep ? '✓' : i + 1}</div>
+      <div class="step-info">
+        <div class="step-name">${step.name}</div>
+        <div class="step-desc">${step.desc}</div>
+      </div>
+      <div class="step-stats">
+        <div class="step-records">${i <= activeStep ? step.records : '—'}</div>
+        <div class="step-duration">${i < activeStep ? step.duration : i === activeStep ? 'Running...' : 'Pending'}</div>
+      </div>`;
+    container.appendChild(stepEl);
+  });
+}
+
+async function runPipeline() {
+  if (pipelineRunning) return;
+  pipelineRunning = true;
+  document.getElementById('run-pipeline-btn').disabled = true;
+  document.getElementById('run-pipeline-btn').textContent = '⏳ Running...';
+
+  for (let i = 0; i < PIPELINE_STEPS.length; i++) {
+    renderPipeline(i);
+    await new Promise(r => setTimeout(r, 800 + Math.random() * 600));
+  }
+  renderPipeline(PIPELINE_STEPS.length);
+  pipelineRunning = false;
+  document.getElementById('run-pipeline-btn').disabled = false;
+  document.getElementById('run-pipeline-btn').textContent = '▶ Run Full Pipeline';
+  showToast('Pipeline complete: 117 parcels harmonized, 6 routed for review, 5 conflicts detected.', 'success');
+}
+
+function resetPipeline() {
+  if (pipelineRunning) return;
+  renderPipeline(-1);
+  showToast('Pipeline reset.', 'info');
+}
+
+// ============================================
+// EXPORT
+// ============================================
+function exportReport() {
+  showToast('Harmonized parcel report exported. 125 parcels, 5 conflicts, audit trail included.', 'success');
+}
+
+// ============================================
+// CHARTS (Chart.js Integration)
+// ============================================
+let chartsInitialized = false;
+
+function initCharts() {
+  if (typeof Chart === 'undefined' || chartsInitialized) return;
+  chartsInitialized = true;
+
+  Chart.defaults.font.family = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
+  Chart.defaults.color = '#64748b';
+
+  // 1. Doughnut Chart — Parcel Status Breakdown
+  const ctxDoughnut = document.getElementById('chart-status-doughnut');
+  if (ctxDoughnut) {
+    new Chart(ctxDoughnut, {
+      type: 'doughnut',
+      data: {
+        labels: ['Harmonized', 'High Confidence', 'Review Required', 'Conflicts'],
+        datasets: [{
+          data: [117, 102, 6, 5],
+          backgroundColor: [
+            'rgba(21, 184, 90, 0.88)',
+            'rgba(75, 142, 247, 0.88)',
+            'rgba(229, 169, 0, 0.88)',
+            'rgba(229, 65, 61, 0.88)'
+          ],
+          borderColor: ['#15b85a', '#4b8ef7', '#e5a900', '#e5413d'],
+          borderWidth: 2,
+          hoverOffset: 6,
+          spacing: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '72%',
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { boxWidth: 10, padding: 14, font: { size: 11, weight: '600' }, usePointStyle: true }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(6, 14, 26, 0.92)',
+            titleFont: { size: 12, weight: '700' },
+            padding: 10,
+            cornerRadius: 8
+          }
+        },
+        animation: { duration: 1200 }
+      }
+    });
+  }
+
+  // 2. Line Chart — Harmonization Progress (7-Day Trend)
+  const ctxLine = document.getElementById('chart-progress-line');
+  if (ctxLine) {
+    new Chart(ctxLine, {
+      type: 'line',
+      data: {
+        labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Today'],
+        datasets: [
+          {
+            label: 'Parcels Harmonized',
+            data: [42, 58, 71, 85, 96, 108, 117],
+            borderColor: '#15b85a',
+            backgroundColor: 'rgba(21, 184, 90, 0.08)',
+            fill: true,
+            tension: 0.4,
+            borderWidth: 2.5,
+            pointRadius: 4,
+            pointBackgroundColor: '#15b85a',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2
+          },
+          {
+            label: 'Conflicts Detected',
+            data: [2, 3, 4, 5, 6, 5, 5],
+            borderColor: '#e5413d',
+            backgroundColor: 'rgba(229, 65, 61, 0.05)',
+            fill: true,
+            tension: 0.4,
+            borderWidth: 2.5,
+            pointRadius: 4,
+            pointBackgroundColor: '#e5413d',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            align: 'end',
+            labels: { boxWidth: 8, padding: 12, font: { size: 11, weight: '600' }, usePointStyle: true }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(6, 14, 26, 0.92)',
+            mode: 'index',
+            intersect: false,
+            padding: 10,
+            cornerRadius: 8
+          }
+        },
+        scales: {
+          y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 10 } } },
+          x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+        },
+        animation: { duration: 1200 }
+      }
+    });
+  }
+
+  // 3. Bar Chart — Data Sources
+  const ctxSources = document.getElementById('chart-sources-bar');
+  if (ctxSources) {
+    new Chart(ctxSources, {
+      type: 'bar',
+      data: {
+        labels: ['Cadastral', 'Revenue', 'Municipal', 'GNSS', 'Drone'],
+        datasets: [{
+          label: 'Records',
+          data: [125, 118, 122, 89, 95],
+          backgroundColor: [
+            'rgba(76, 139, 245, 0.8)',
+            'rgba(123, 97, 255, 0.8)',
+            'rgba(21, 163, 109, 0.8)',
+            'rgba(229, 169, 0, 0.8)',
+            'rgba(230, 107, 61, 0.8)'
+          ],
+          borderColor: ['#4c8bf5', '#7b61ff', '#15a36d', '#e5a900', '#e66b3d'],
+          borderWidth: 1.5,
+          borderRadius: 6,
+          barThickness: 26
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 10 } } },
+          x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+        },
+        animation: { duration: 1000 }
+      }
+    });
+  }
+
+  // 4. Horizontal Bar — Confidence Distribution
+  const ctxConf = document.getElementById('chart-confidence-bar');
+  if (ctxConf) {
+    new Chart(ctxConf, {
+      type: 'bar',
+      data: {
+        labels: ['≥95%', '90–95%', '80–90%', '70–80%', '<70%'],
+        datasets: [{
+          label: 'Parcels',
+          data: [68, 34, 12, 7, 4],
+          backgroundColor: [
+            'rgba(21, 184, 90, 0.8)',
+            'rgba(75, 142, 247, 0.8)',
+            'rgba(123, 97, 255, 0.8)',
+            'rgba(229, 169, 0, 0.8)',
+            'rgba(229, 65, 61, 0.8)'
+          ],
+          borderColor: ['#15b85a', '#4b8ef7', '#7b61ff', '#e5a900', '#e5413d'],
+          borderWidth: 1.5,
+          borderRadius: 4,
+          barThickness: 16
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 10 } } },
+          y: { grid: { display: false }, ticks: { font: { size: 10, weight: '600' } } }
+        },
+        animation: { duration: 1000 }
+      }
+    });
+  }
+
+  // 5. Radar Chart — Data Quality Metrics
+  const ctxRadar = document.getElementById('chart-quality-radar');
+  if (ctxRadar) {
+    new Chart(ctxRadar, {
+      type: 'radar',
+      data: {
+        labels: ['Spatial', 'Attributes', 'CRS Valid', 'Boundary', 'Owner Match', 'Area Agree'],
+        datasets: [
+          {
+            label: 'Current Score',
+            data: [92, 88, 97, 85, 78, 91],
+            borderColor: '#1769e0',
+            backgroundColor: 'rgba(23, 105, 224, 0.12)',
+            pointBackgroundColor: '#1769e0',
+            pointBorderColor: '#fff',
+            pointRadius: 3,
+            borderWidth: 2,
+            fill: true
+          },
+          {
+            label: 'Threshold',
+            data: [90, 90, 95, 90, 85, 90],
+            borderColor: 'rgba(123, 97, 255, 0.5)',
+            borderDash: [4, 4],
+            pointRadius: 2,
+            borderWidth: 1.5,
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { boxWidth: 8, padding: 8, font: { size: 10 } }
+          }
+        },
+        scales: {
+          r: {
+            min: 50,
+            max: 100,
+            ticks: { stepSize: 15, font: { size: 8 }, backdropColor: 'transparent' },
+            pointLabels: { font: { size: 9, weight: '600' } },
+            grid: { color: 'rgba(0,0,0,0.06)' }
+          }
+        },
+        animation: { duration: 1200 }
+      }
+    });
+  }
+}
+
+// ============================================
+// INIT
+// ============================================
+document.addEventListener('DOMContentLoaded', () => {
+  animateCounters();
+  renderConflicts();
+  renderDatasets();
+  renderPipeline(-1);
+  initCharts();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,405 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-101",
+        "parcel_id": "P-101",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.77605,
+          30.74405
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-102",
+        "parcel_id": "P-102",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.77805000000001,
+          30.74405
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-103",
+        "parcel_id": "P-103",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.78025,
+          30.74405
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-104",
+        "parcel_id": "P-104",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.77605,
+          30.74255
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-105",
+        "parcel_id": "P-105",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.77855,
+          30.74255
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-106",
+        "parcel_id": "P-106",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.78055,
+          30.74255
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-107",
+        "parcel_id": "P-107",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.77605,
+          30.74135
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-108",
+        "parcel_id": "P-108",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.77885,
+          30.74135
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-109",
+        "parcel_id": "P-109",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.78055,
+          30.74135
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-110",
+        "parcel_id": "P-110",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.77685,
+          30.74005
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-111",
+        "parcel_id": "P-111",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.77865,
+          30.74005
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-112",
+        "parcel_id": "P-112",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.78045,
+          30.74005
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-113",
+        "parcel_id": "P-113",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.77625,
+          30.739050000000002
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-114",
+        "parcel_id": "P-114",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.77805000000001,
+          30.739050000000002
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-115",
+        "parcel_id": "P-115",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.78025,
+          30.739050000000002
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-116",
+        "parcel_id": "P-116",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.78155,
+          30.739050000000002
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-117",
+        "parcel_id": "P-117",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.77655,
+          30.744850000000003
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-118",
+        "parcel_id": "P-118",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.77825,
+          30.744850000000003
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-119",
+        "parcel_id": "P-119",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.78025,
+          30.744850000000003
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-120",
+        "parcel_id": "P-120",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.77685,
+          30.73785
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-121",
+        "parcel_id": "P-121",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.77865,
+          30.73785
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-122",
+        "parcel_id": "P-122",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.78065000000001,
+          30.73785
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-123",
+        "parcel_id": "P-123",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.78225,
+          30.73785
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-124",
+        "parcel_id": "P-124",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.77755,
+          30.73685
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "point_id": "GNSS-P-125",
+        "parcel_id": "P-125",
+        "accuracy_cm": 1.5,
+        "surveyor": "Survey of India / DGPS Team A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.77955,
+          30.73685
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,1011 @@
+{
+  "type": "FeatureCollection",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "EPSG:4326"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "P-101",
+      "properties": {
+        "parcel_id": "P-101",
+        "status": "validated",
+        "confidence": 97,
+        "area": 850,
+        "land_use": "Commercial",
+        "owner": "Municipal Corp.",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.776,
+              30.744
+            ],
+            [
+              76.7775,
+              30.744
+            ],
+            [
+              76.7775,
+              30.743
+            ],
+            [
+              76.776,
+              30.743
+            ],
+            [
+              76.776,
+              30.744
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-102",
+      "properties": {
+        "parcel_id": "P-102",
+        "status": "validated",
+        "confidence": 95,
+        "area": 1200,
+        "land_use": "Commercial",
+        "owner": "State Govt.",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.778,
+              30.744
+            ],
+            [
+              76.7798,
+              30.744
+            ],
+            [
+              76.7798,
+              30.743
+            ],
+            [
+              76.778,
+              30.743
+            ],
+            [
+              76.778,
+              30.744
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-103",
+      "properties": {
+        "parcel_id": "P-103",
+        "status": "review",
+        "confidence": 74,
+        "area": 960,
+        "land_use": "Mixed Use",
+        "owner": "Private",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7802,
+              30.744
+            ],
+            [
+              76.7818,
+              30.744
+            ],
+            [
+              76.7818,
+              30.743
+            ],
+            [
+              76.7802,
+              30.743
+            ],
+            [
+              76.7802,
+              30.744
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-104",
+      "properties": {
+        "parcel_id": "P-104",
+        "status": "conflict",
+        "confidence": 58,
+        "area": 1000,
+        "land_use": "Residential",
+        "owner": "Private",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.776,
+              30.7425
+            ],
+            [
+              76.778,
+              30.7425
+            ],
+            [
+              76.778,
+              30.7415
+            ],
+            [
+              76.776,
+              30.7415
+            ],
+            [
+              76.776,
+              30.7425
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-105",
+      "properties": {
+        "parcel_id": "P-105",
+        "status": "validated",
+        "confidence": 99,
+        "area": 700,
+        "land_use": "Commercial",
+        "owner": "Municipal Corp.",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7785,
+              30.7425
+            ],
+            [
+              76.78,
+              30.7425
+            ],
+            [
+              76.78,
+              30.7415
+            ],
+            [
+              76.7785,
+              30.7415
+            ],
+            [
+              76.7785,
+              30.7425
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-106",
+      "properties": {
+        "parcel_id": "P-106",
+        "status": "validated",
+        "confidence": 93,
+        "area": 1100,
+        "land_use": "Commercial",
+        "owner": "Private",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7805,
+              30.7425
+            ],
+            [
+              76.7822,
+              30.7425
+            ],
+            [
+              76.7822,
+              30.7415
+            ],
+            [
+              76.7805,
+              30.7415
+            ],
+            [
+              76.7805,
+              30.7425
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-107",
+      "properties": {
+        "parcel_id": "P-107",
+        "status": "conflict",
+        "confidence": 45,
+        "area": 1400,
+        "land_use": "Institutional",
+        "owner": "State Govt.",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.776,
+              30.7413
+            ],
+            [
+              76.7782,
+              30.7413
+            ],
+            [
+              76.7782,
+              30.7403
+            ],
+            [
+              76.776,
+              30.7403
+            ],
+            [
+              76.776,
+              30.7413
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-108",
+      "properties": {
+        "parcel_id": "P-108",
+        "status": "review",
+        "confidence": 72,
+        "area": 550,
+        "land_use": "Residential",
+        "owner": "Private",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7788,
+              30.7413
+            ],
+            [
+              76.78,
+              30.7413
+            ],
+            [
+              76.78,
+              30.7403
+            ],
+            [
+              76.7788,
+              30.7403
+            ],
+            [
+              76.7788,
+              30.7413
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-109",
+      "properties": {
+        "parcel_id": "P-109",
+        "status": "validated",
+        "confidence": 91,
+        "area": 800,
+        "land_use": "Commercial",
+        "owner": "Private",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7805,
+              30.7413
+            ],
+            [
+              76.782,
+              30.7413
+            ],
+            [
+              76.782,
+              30.7403
+            ],
+            [
+              76.7805,
+              30.7403
+            ],
+            [
+              76.7805,
+              30.7413
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-110",
+      "properties": {
+        "parcel_id": "P-110",
+        "status": "changed",
+        "confidence": 88,
+        "area": 650,
+        "land_use": "Commercial",
+        "owner": "Municipal Corp.",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7768,
+              30.74
+            ],
+            [
+              76.7782,
+              30.74
+            ],
+            [
+              76.7782,
+              30.7392
+            ],
+            [
+              76.7768,
+              30.7392
+            ],
+            [
+              76.7768,
+              30.74
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-111",
+      "properties": {
+        "parcel_id": "P-111",
+        "status": "validated",
+        "confidence": 96,
+        "area": 900,
+        "land_use": "Residential",
+        "owner": "Private",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7786,
+              30.74
+            ],
+            [
+              76.78,
+              30.74
+            ],
+            [
+              76.78,
+              30.7392
+            ],
+            [
+              76.7786,
+              30.7392
+            ],
+            [
+              76.7786,
+              30.74
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-112",
+      "properties": {
+        "parcel_id": "P-112",
+        "status": "conflict",
+        "confidence": 52,
+        "area": 1300,
+        "land_use": "Residential",
+        "owner": "Private",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7804,
+              30.74
+            ],
+            [
+              76.7822,
+              30.74
+            ],
+            [
+              76.7822,
+              30.7392
+            ],
+            [
+              76.7804,
+              30.7392
+            ],
+            [
+              76.7804,
+              30.74
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-113",
+      "properties": {
+        "parcel_id": "P-113",
+        "status": "review",
+        "confidence": 69,
+        "area": 780,
+        "land_use": "Mixed Use",
+        "owner": "Private",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7762,
+              30.739
+            ],
+            [
+              76.7776,
+              30.739
+            ],
+            [
+              76.7776,
+              30.7382
+            ],
+            [
+              76.7762,
+              30.7382
+            ],
+            [
+              76.7762,
+              30.739
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-114",
+      "properties": {
+        "parcel_id": "P-114",
+        "status": "validated",
+        "confidence": 94,
+        "area": 1050,
+        "land_use": "Commercial",
+        "owner": "Municipal Corp.",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.778,
+              30.739
+            ],
+            [
+              76.7798,
+              30.739
+            ],
+            [
+              76.7798,
+              30.7382
+            ],
+            [
+              76.778,
+              30.7382
+            ],
+            [
+              76.778,
+              30.739
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-115",
+      "properties": {
+        "parcel_id": "P-115",
+        "status": "changed",
+        "confidence": 85,
+        "area": 500,
+        "land_use": "Residential",
+        "owner": "Private",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7802,
+              30.739
+            ],
+            [
+              76.7812,
+              30.739
+            ],
+            [
+              76.7812,
+              30.7382
+            ],
+            [
+              76.7802,
+              30.7382
+            ],
+            [
+              76.7802,
+              30.739
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-116",
+      "properties": {
+        "parcel_id": "P-116",
+        "status": "validated",
+        "confidence": 98,
+        "area": 1500,
+        "land_use": "Institutional",
+        "owner": "State Govt.",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7815,
+              30.739
+            ],
+            [
+              76.7838,
+              30.739
+            ],
+            [
+              76.7838,
+              30.738
+            ],
+            [
+              76.7815,
+              30.738
+            ],
+            [
+              76.7815,
+              30.739
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-117",
+      "properties": {
+        "parcel_id": "P-117",
+        "status": "review",
+        "confidence": 68,
+        "area": 620,
+        "land_use": "Residential",
+        "owner": "Private",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7765,
+              30.7448
+            ],
+            [
+              76.7778,
+              30.7448
+            ],
+            [
+              76.7778,
+              30.7442
+            ],
+            [
+              76.7765,
+              30.7442
+            ],
+            [
+              76.7765,
+              30.7448
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-118",
+      "properties": {
+        "parcel_id": "P-118",
+        "status": "validated",
+        "confidence": 92,
+        "area": 880,
+        "land_use": "Commercial",
+        "owner": "Private",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7782,
+              30.7448
+            ],
+            [
+              76.7798,
+              30.7448
+            ],
+            [
+              76.7798,
+              30.7442
+            ],
+            [
+              76.7782,
+              30.7442
+            ],
+            [
+              76.7782,
+              30.7448
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-119",
+      "properties": {
+        "parcel_id": "P-119",
+        "status": "conflict",
+        "confidence": 50,
+        "area": 1150,
+        "land_use": "Commercial",
+        "owner": "Disputed",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7802,
+              30.7448
+            ],
+            [
+              76.782,
+              30.7448
+            ],
+            [
+              76.782,
+              30.7442
+            ],
+            [
+              76.7802,
+              30.7442
+            ],
+            [
+              76.7802,
+              30.7448
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-120",
+      "properties": {
+        "parcel_id": "P-120",
+        "status": "validated",
+        "confidence": 90,
+        "area": 750,
+        "land_use": "Residential",
+        "owner": "Private",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7768,
+              30.7378
+            ],
+            [
+              76.7782,
+              30.7378
+            ],
+            [
+              76.7802,
+              30.737
+            ],
+            [
+              76.7768,
+              30.737
+            ],
+            [
+              76.7768,
+              30.7378
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-121",
+      "properties": {
+        "parcel_id": "P-121",
+        "status": "changed",
+        "confidence": 86,
+        "area": 950,
+        "land_use": "Commercial",
+        "owner": "Private",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7786,
+              30.7378
+            ],
+            [
+              76.7802,
+              30.7378
+            ],
+            [
+              76.7802,
+              30.737
+            ],
+            [
+              76.7786,
+              30.737
+            ],
+            [
+              76.7786,
+              30.7378
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-122",
+      "properties": {
+        "parcel_id": "P-122",
+        "status": "review",
+        "confidence": 71,
+        "area": 680,
+        "land_use": "Residential",
+        "owner": "Private",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7806,
+              30.7378
+            ],
+            [
+              76.7818,
+              30.7378
+            ],
+            [
+              76.7818,
+              30.737
+            ],
+            [
+              76.7806,
+              30.737
+            ],
+            [
+              76.7806,
+              30.7378
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-123",
+      "properties": {
+        "parcel_id": "P-123",
+        "status": "validated",
+        "confidence": 96,
+        "area": 1100,
+        "land_use": "Institutional",
+        "owner": "Municipal Corp.",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7822,
+              30.7378
+            ],
+            [
+              76.784,
+              30.7378
+            ],
+            [
+              76.784,
+              30.737
+            ],
+            [
+              76.7822,
+              30.737
+            ],
+            [
+              76.7822,
+              30.7378
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-124",
+      "properties": {
+        "parcel_id": "P-124",
+        "status": "conflict",
+        "confidence": 47,
+        "area": 820,
+        "land_use": "Residential",
+        "owner": "Private",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7775,
+              30.7368
+            ],
+            [
+              76.779,
+              30.7368
+            ],
+            [
+              76.779,
+              30.736
+            ],
+            [
+              76.7775,
+              30.736
+            ],
+            [
+              76.7775,
+              30.7368
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "P-125",
+      "properties": {
+        "parcel_id": "P-125",
+        "status": "validated",
+        "confidence": 94,
+        "area": 600,
+        "land_use": "Commercial",
+        "owner": "Private",
+        "source": "Chandigarh Cadastral Survey 2024"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7795,
+              30.7368
+            ],
+            [
+              76.7808,
+              30.7368
+            ],
+            [
+              76.7808,
+              30.736
+            ],
+            [
+              76.7795,
+              30.736
+            ],
+            [
+              76.7795,
+              30.7368
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

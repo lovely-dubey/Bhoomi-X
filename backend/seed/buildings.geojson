@@ -1,0 +1,545 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLD-P-101",
+        "parcel_id": "P-101",
+        "floors": 3,
+        "structure": "RCC Commercial"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7762,
+              30.7439
+            ],
+            [
+              76.7773,
+              30.7439
+            ],
+            [
+              76.7773,
+              30.7431
+            ],
+            [
+              76.7762,
+              30.7431
+            ],
+            [
+              76.7762,
+              30.7439
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLD-P-102",
+        "parcel_id": "P-102",
+        "floors": 3,
+        "structure": "RCC Commercial"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.77820000000001,
+              30.7439
+            ],
+            [
+              76.77959999999999,
+              30.7439
+            ],
+            [
+              76.77959999999999,
+              30.7431
+            ],
+            [
+              76.77820000000001,
+              30.7431
+            ],
+            [
+              76.77820000000001,
+              30.7439
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLD-P-103",
+        "parcel_id": "P-103",
+        "floors": 3,
+        "structure": "RCC Commercial"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7804,
+              30.7439
+            ],
+            [
+              76.7816,
+              30.7439
+            ],
+            [
+              76.7816,
+              30.7431
+            ],
+            [
+              76.7804,
+              30.7431
+            ],
+            [
+              76.7804,
+              30.7439
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLD-P-104",
+        "parcel_id": "P-104",
+        "floors": 3,
+        "structure": "RCC Commercial"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7762,
+              30.7424
+            ],
+            [
+              76.7778,
+              30.7424
+            ],
+            [
+              76.7778,
+              30.7416
+            ],
+            [
+              76.7762,
+              30.7416
+            ],
+            [
+              76.7762,
+              30.7424
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLD-P-105",
+        "parcel_id": "P-105",
+        "floors": 3,
+        "structure": "RCC Commercial"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7787,
+              30.7424
+            ],
+            [
+              76.7798,
+              30.7424
+            ],
+            [
+              76.7798,
+              30.7416
+            ],
+            [
+              76.7787,
+              30.7416
+            ],
+            [
+              76.7787,
+              30.7424
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLD-P-106",
+        "parcel_id": "P-106",
+        "floors": 3,
+        "structure": "RCC Commercial"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.78070000000001,
+              30.7424
+            ],
+            [
+              76.782,
+              30.7424
+            ],
+            [
+              76.782,
+              30.7416
+            ],
+            [
+              76.78070000000001,
+              30.7416
+            ],
+            [
+              76.78070000000001,
+              30.7424
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLD-P-107",
+        "parcel_id": "P-107",
+        "floors": 3,
+        "structure": "RCC Commercial"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7762,
+              30.7412
+            ],
+            [
+              76.77799999999999,
+              30.7412
+            ],
+            [
+              76.77799999999999,
+              30.7404
+            ],
+            [
+              76.7762,
+              30.7404
+            ],
+            [
+              76.7762,
+              30.7412
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLD-P-108",
+        "parcel_id": "P-108",
+        "floors": 3,
+        "structure": "RCC Commercial"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.77900000000001,
+              30.7412
+            ],
+            [
+              76.7798,
+              30.7412
+            ],
+            [
+              76.7798,
+              30.7404
+            ],
+            [
+              76.77900000000001,
+              30.7404
+            ],
+            [
+              76.77900000000001,
+              30.7412
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLD-P-109",
+        "parcel_id": "P-109",
+        "floors": 3,
+        "structure": "RCC Commercial"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.78070000000001,
+              30.7412
+            ],
+            [
+              76.78179999999999,
+              30.7412
+            ],
+            [
+              76.78179999999999,
+              30.7404
+            ],
+            [
+              76.78070000000001,
+              30.7404
+            ],
+            [
+              76.78070000000001,
+              30.7412
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLD-P-110",
+        "parcel_id": "P-110",
+        "floors": 3,
+        "structure": "RCC Commercial"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.777,
+              30.7399
+            ],
+            [
+              76.77799999999999,
+              30.7399
+            ],
+            [
+              76.77799999999999,
+              30.7393
+            ],
+            [
+              76.777,
+              30.7393
+            ],
+            [
+              76.777,
+              30.7399
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLD-P-111",
+        "parcel_id": "P-111",
+        "floors": 3,
+        "structure": "RCC Commercial"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7788,
+              30.7399
+            ],
+            [
+              76.7798,
+              30.7399
+            ],
+            [
+              76.7798,
+              30.7393
+            ],
+            [
+              76.7788,
+              30.7393
+            ],
+            [
+              76.7788,
+              30.7399
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLD-P-112",
+        "parcel_id": "P-112",
+        "floors": 3,
+        "structure": "RCC Commercial"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7806,
+              30.7399
+            ],
+            [
+              76.782,
+              30.7399
+            ],
+            [
+              76.782,
+              30.7393
+            ],
+            [
+              76.7806,
+              30.7393
+            ],
+            [
+              76.7806,
+              30.7399
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLD-P-113",
+        "parcel_id": "P-113",
+        "floors": 3,
+        "structure": "RCC Commercial"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.77640000000001,
+              30.7389
+            ],
+            [
+              76.7774,
+              30.7389
+            ],
+            [
+              76.7774,
+              30.7383
+            ],
+            [
+              76.77640000000001,
+              30.7383
+            ],
+            [
+              76.77640000000001,
+              30.7389
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLD-P-114",
+        "parcel_id": "P-114",
+        "floors": 3,
+        "structure": "RCC Commercial"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.77820000000001,
+              30.7389
+            ],
+            [
+              76.77959999999999,
+              30.7389
+            ],
+            [
+              76.77959999999999,
+              30.7383
+            ],
+            [
+              76.77820000000001,
+              30.7383
+            ],
+            [
+              76.77820000000001,
+              30.7389
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLD-P-115",
+        "parcel_id": "P-115",
+        "floors": 3,
+        "structure": "RCC Commercial"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7804,
+              30.7389
+            ],
+            [
+              76.78099999999999,
+              30.7389
+            ],
+            [
+              76.78099999999999,
+              30.7383
+            ],
+            [
+              76.7804,
+              30.7383
+            ],
+            [
+              76.7804,
+              30.7389
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

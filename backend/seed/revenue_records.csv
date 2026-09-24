@@ -1,0 +1,26 @@
+khasra_no,owner_name,area_sqm,land_use,mutation_status,dispute_flag
+P-101,Municipal Corp.,850,Commercial,MUTATED,NO
+P-102,State Govt.,1200,Commercial,MUTATED,NO
+P-103,Private,960,Mixed Use,MUTATED,NO
+P-104,Private,1000,Residential,MUTATED,YES
+P-105,Municipal Corp.,700,Commercial,MUTATED,NO
+P-106,Private,1100,Commercial,MUTATED,NO
+P-107,State Govt.,1400,Institutional,MUTATED,YES
+P-108,Private,550,Residential,MUTATED,NO
+P-109,Private,800,Commercial,MUTATED,NO
+P-110,Municipal Corp.,650,Commercial,MUTATED,NO
+P-111,Private,900,Residential,MUTATED,NO
+P-112,Private,1300,Residential,MUTATED,YES
+P-113,Private,780,Mixed Use,MUTATED,NO
+P-114,Municipal Corp.,1050,Commercial,MUTATED,NO
+P-115,Private,500,Residential,MUTATED,NO
+P-116,State Govt.,1500,Institutional,MUTATED,NO
+P-117,Private,620,Residential,MUTATED,NO
+P-118,Private,880,Commercial,MUTATED,NO
+P-119,Disputed,1150,Commercial,MUTATED,YES
+P-120,Private,750,Residential,MUTATED,NO
+P-121,Private,950,Commercial,MUTATED,NO
+P-122,Private,680,Residential,MUTATED,NO
+P-123,Municipal Corp.,1100,Institutional,MUTATED,NO
+P-124,Private,820,Residential,MUTATED,YES
+P-125,Private,600,Commercial,MUTATED,NO

@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  # ─── PostgreSQL + PostGIS ───
+  postgres:
+    image: postgis/postgis:16-3.4
+    container_name: bhoomi-x-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-bhoomix}
+      POSTGRES_USER: ${POSTGRES_USER:-bhoomix}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bhoomix_dev_2026}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-bhoomix} -d ${POSTGRES_DB:-bhoomix}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - bhoomi-net
+
+  # ─── FastAPI Backend ───
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: bhoomi-x-api
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-bhoomix}:${POSTGRES_PASSWORD:-bhoomix_dev_2026}@postgres:5432/${POSTGRES_DB:-bhoomix}
+      DATABASE_URL_SYNC: postgresql://${POSTGRES_USER:-bhoomix}:${POSTGRES_PASSWORD:-bhoomix_dev_2026}@postgres:5432/${POSTGRES_DB:-bhoomix}
+      ENVIRONMENT: development
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - upload_data:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - bhoomi-net
+
+  # ─── React Frontend ───
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: bhoomi-x-ui
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev -- --host 0.0.0.0
+    depends_on:
+      - backend
+    networks:
+      - bhoomi-net
+
+  # ─── Nginx Reverse Proxy ───
+  nginx:
+    image: nginx:alpine
+    container_name: bhoomi-x-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - bhoomi-net
+
+volumes:
+  pgdata:
+  upload_data:
+
+networks:
+  bhoomi-net:
+    driver: bridge
