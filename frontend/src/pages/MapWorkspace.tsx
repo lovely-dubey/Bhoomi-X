@@ -278,10 +278,28 @@ export default function MapWorkspace({ initialParcelId }: Props) {
   const p = selectedParcel;
   const confColor = p ? (p.confidence >= 90 ? '#10b981' : p.confidence >= 70 ? '#f59e0b' : '#ef4444') : '#94a3b8';
 
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
   return (
     <div className="map-workspace-layout">
+      {/* Mobile Sidebar Toggle Floating Button */}
+      <button
+        className="mobile-filter-fab"
+        onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+        title="Toggle Filter & Layers"
+        aria-label="Toggle Layers & Filters"
+      >
+        <span>{mobileSidebarOpen ? '✕' : '🗂'}</span>
+        <span>{mobileSidebarOpen ? 'Close' : 'Layers'}</span>
+      </button>
+
+      {/* Mobile Backdrop */}
+      {mobileSidebarOpen && (
+        <div className="map-sidebar-backdrop" onClick={() => setMobileSidebarOpen(false)} />
+      )}
+
       {/* Sidebar Controls */}
-      <aside className="map-sidebar">
+      <aside className={`map-sidebar ${mobileSidebarOpen ? 'mobile-open' : ''}`}>
         <div className="sidebar-section">
           <input
             className="map-search"
