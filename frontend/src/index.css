@@ -133,9 +133,10 @@ body {
 
 /* ===== PREMIUM HEADER / NAVBAR ===== */
 .app-header {
-  background: linear-gradient(135deg, #020617 0%, #0a1628 30%, #0f1d36 60%, #0c1a30 100%);
+  background: linear-gradient(135deg, #020617 0%, #0a1628 35%, #0f1d36 70%, #0c1a30 100%);
   color: white;
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
@@ -146,41 +147,15 @@ body {
     0 4px 24px rgba(0, 0, 0, 0.35),
     0 1px 0 rgba(255, 255, 255, 0.04) inset;
   flex-shrink: 0;
-  overflow: hidden;
+  gap: 16px;
 }
 
-/* Animated gradient glow line at bottom of header */
-.header-glow-border {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--cyan-400) 15%,
-    var(--navy-400) 30%,
-    var(--purple-400) 50%,
-    var(--navy-400) 70%,
-    var(--cyan-400) 85%,
-    transparent 100%
-  );
-  background-size: 200% 100%;
-  animation: glowBorderSlide 4s linear infinite;
-  opacity: 0.85;
-}
-
-@keyframes glowBorderSlide {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-.header-left {
+.header-top-bar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 16px;
-  min-width: 0;
+  flex-shrink: 0;
 }
 
 /* Brand Block with Logo */
@@ -426,13 +401,45 @@ body {
   font-weight: 500;
 }
 
+.nav-tabs-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+/* Animated gradient glow line at bottom of header */
+.header-glow-border {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--cyan-400) 15%,
+    var(--navy-400) 30%,
+    var(--purple-400) 50%,
+    var(--navy-400) 70%,
+    var(--cyan-400) 85%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: glowBorderSlide 4s linear infinite;
+  opacity: 0.85;
+}
+
+@keyframes glowBorderSlide {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 /* ===== NAV TABS — Premium Pill Style ===== */
 .nav-tabs {
   display: flex;
   align-items: center;
-  gap: 2px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 10px;
   padding: 3px;
   backdrop-filter: blur(8px);
@@ -1288,39 +1295,39 @@ body {
 @media (max-width: 992px) {
   .app-header {
     height: auto;
-    min-height: 56px;
-    padding: 8px 14px;
-    flex-wrap: wrap;
-    gap: 10px;
+    min-height: auto;
+    padding: 10px 16px 8px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
   }
   
-  .app-main {
-    height: calc(100vh - 60px);
-  }
-
-  .header-left {
+  .header-top-bar {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .nav-tabs-wrapper {
+    width: 100%;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     padding-bottom: 2px;
   }
 
-  .nav-divider {
-    display: none;
-  }
-
-  .sih-badge {
-    display: none;
-  }
-
-  .header-right {
-    display: none; /* Secondary items hidden to preserve mobile real estate */
-  }
-
   .nav-tabs {
-    flex-shrink: 0;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .nav-tab {
+    flex: 1;
+    justify-content: center;
+    padding: 7px 10px;
+    font-size: 12.5px;
+  }
+
+  .app-main {
+    height: calc(100vh - 105px);
   }
 
   .dash-top {
@@ -1366,7 +1373,8 @@ body {
 /* Mobile Devices (<= 768px) */
 @media (max-width: 768px) {
   .app-header {
-    padding: 8px 12px;
+    padding: 8px 12px 6px;
+    gap: 6px;
   }
 
   .brand-sub {
@@ -1374,7 +1382,7 @@ body {
   }
 
   .brand-name {
-    font-size: 18px;
+    font-size: 17px;
     letter-spacing: 1.5px;
   }
 
@@ -1383,24 +1391,55 @@ body {
     height: 32px;
   }
 
-  .brand-logo-icon svg {
-    width: 18px;
-    height: 18px;
+  .header-status-pill {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  .sih-badge {
+    display: none;
+  }
+
+  .user-block .user-info {
+    display: none;
+  }
+
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+  }
+
+  .nav-tabs-wrapper {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-tabs-wrapper::-webkit-scrollbar {
+    display: none;
   }
 
   .nav-tabs {
+    min-width: 340px;
     width: 100%;
-    justify-content: space-around;
     padding: 2px;
     gap: 2px;
+    background: rgba(255, 255, 255, 0.08);
   }
 
   .nav-tab {
-    padding: 6px 10px;
+    padding: 6px 8px;
     font-size: 12px;
-    gap: 5px;
-    flex: 1;
-    justify-content: center;
+    gap: 4px;
+    border-radius: 6px;
+  }
+
+  .tab-icon {
+    font-size: 13px;
+  }
+
+  .app-main {
+    height: calc(100vh - 98px);
   }
 
   .page-scroll {
@@ -1465,21 +1504,55 @@ body {
     border-radius: var(--radius-md);
   }
 
-  /* Pipeline on Mobile */
+  /* Pipeline Action Bar & Buttons on Mobile */
+  .pipeline-action-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    padding: 12px 14px !important;
+  }
+
+  .pipeline-buttons-group {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .pipeline-main-btn {
+    flex: 1;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
   .pipeline-step {
     padding: 12px 14px;
-    gap: 12px;
+    gap: 10px;
   }
 
   .step-number {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     font-size: 12px;
   }
 }
 
 /* Small Phones (<= 480px) */
 @media (max-width: 480px) {
+  .brand-name {
+    font-size: 15px;
+  }
+
+  .header-status-pill span:not(.status-dot) {
+    display: none;
+  }
+
+  .header-status-pill {
+    padding: 6px;
+    border-radius: 50%;
+  }
+
   .dash-top {
     grid-template-columns: 1fr !important;
   }
@@ -1489,11 +1562,7 @@ body {
   }
 
   .nav-tab {
-    padding: 6px 4px;
-  }
-
-  .nav-tab .tab-icon {
-    font-size: 13px;
+    padding: 5px 6px;
   }
 
   .source-evidence {

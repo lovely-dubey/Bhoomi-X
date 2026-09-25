@@ -118,9 +118,60 @@ export default function Pipeline({ onNavigate, autoRun = false }: PipelineProps)
   return (
     <div className="page-scroll" style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
       <div style={{ maxWidth: 900, width: '100%' }}>
-        <div style={{ textAlign: 'center', marginBottom: 24 }}>
+        <div style={{ textAlign: 'center', marginBottom: 20 }}>
           <h2 style={{ fontSize: 22, fontWeight: 800 }}>Harmonization Pipeline</h2>
-          <p className="text-muted">AI recommends · GIS computes · Authorized humans verify</p>
+          <p className="text-muted" style={{ fontSize: 13 }}>AI recommends · GIS computes · Authorized humans verify</p>
+        </div>
+
+        {/* Top Sticky/Accessible Action Bar */}
+        <div className="pipeline-action-bar card" style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 12,
+          padding: '14px 18px',
+          marginBottom: 16,
+          background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+          border: '1.5px solid var(--grey-200)',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{
+              width: 10,
+              height: 10,
+              borderRadius: '50%',
+              background: running ? '#f59e0b' : complete ? '#10b981' : '#94a3b8',
+              boxShadow: running ? '0 0 10px #f59e0b' : complete ? '0 0 10px #10b981' : 'none',
+              animation: running ? 'statusPulse 1s infinite' : 'none'
+            }} />
+            <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--grey-800)' }}>
+              Status: {running ? 'Pipeline Processing...' : complete ? 'Reconciliation Finished' : 'Ready to Run'}
+            </span>
+          </div>
+
+          <div className="pipeline-buttons-group" style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <button
+              className="btn btn-primary pipeline-main-btn"
+              onClick={runPipeline}
+              disabled={running}
+              style={{
+                padding: '10px 22px',
+                fontSize: 13.5,
+                fontWeight: 700,
+                boxShadow: '0 4px 14px rgba(37, 99, 235, 0.35)',
+              }}
+            >
+              {running ? '⏳ Executing Pipeline...' : complete ? '↻ Re-run Full Pipeline' : '▶ Run Harmonization Pipeline'}
+            </button>
+            <button
+              className="btn btn-ghost"
+              onClick={resetPipelineLocal}
+              disabled={running}
+              style={{ padding: '10px 16px', fontSize: 13 }}
+            >
+              Reset
+            </button>
+          </div>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -133,11 +184,11 @@ export default function Pipeline({ onNavigate, autoRun = false }: PipelineProps)
                 <div className={`step-number ${step.status}`}>
                   {step.status === 'complete' ? '✓' : step.step_number}
                 </div>
-                <div style={{ flex: 1 }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontWeight: 700, fontSize: 14 }}>{step.name}</div>
                   <div className="text-muted" style={{ fontSize: 12 }}>{step.description}</div>
                 </div>
-                <div style={{ textAlign: 'right' }}>
+                <div style={{ textAlign: 'right', flexShrink: 0 }}>
                   <div style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>
                     {step.records_processed || '—'}
                   </div>
@@ -155,18 +206,18 @@ export default function Pipeline({ onNavigate, autoRun = false }: PipelineProps)
             <p style={{ fontWeight: 700, color: '#0d9448', fontSize: 15, marginBottom: 14 }}>
               ✓ {summaryText || 'Pipeline Complete: Harmonization executed across all ingested layers.'}
             </p>
-            <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
               <button
                 className="btn btn-primary"
                 onClick={() => onNavigate?.('map')}
-                style={{ fontSize: 13, padding: '8px 20px' }}
+                style={{ fontSize: 13, padding: '9px 20px' }}
               >
                 🗺 View Harmonized Parcels on Map
               </button>
               <button
                 className="btn btn-ghost"
                 onClick={() => onNavigate?.('conflicts')}
-                style={{ fontSize: 13, padding: '8px 20px' }}
+                style={{ fontSize: 13, padding: '9px 20px' }}
               >
                 ⚠ Resolve Detected Conflicts
               </button>
@@ -174,12 +225,16 @@ export default function Pipeline({ onNavigate, autoRun = false }: PipelineProps)
           </div>
         )}
 
-        <div style={{ textAlign: 'center', marginTop: 24 }}>
-          <button className="btn btn-primary" onClick={runPipeline} disabled={running}
-            style={{ padding: '14px 32px', fontSize: 15 }}>
-            {running ? '⏳ Running...' : '▶ Re-run Full Pipeline'}
+        {/* Bottom Floating/Accessible action for mobile scrolling */}
+        <div style={{ textAlign: 'center', marginTop: 24, marginBottom: 20 }}>
+          <button
+            className="btn btn-primary pipeline-main-btn"
+            onClick={runPipeline}
+            disabled={running}
+            style={{ padding: '12px 28px', fontSize: 14, fontWeight: 700 }}
+          >
+            {running ? '⏳ Executing Pipeline...' : complete ? '↻ Re-run Full Pipeline' : '▶ Run Harmonization Pipeline'}
           </button>
-          <button className="btn btn-ghost" onClick={resetPipelineLocal} style={{ marginLeft: 8 }}>Reset</button>
         </div>
       </div>
     </div>

@@ -109,11 +109,12 @@ export default function App() {
         {/* Animated gradient border at bottom */}
         <div className="header-glow-border" />
 
-        <div className="header-left">
+        {/* Top bar: Brand + Actions */}
+        <div className="header-top-bar">
           <div className="brand-block" onClick={() => setActiveTab('dashboard')} style={{ cursor: 'pointer' }}>
             <div className="brand-logo-wrap">
               <div className="brand-logo-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <polygon points="1 6 12 2 23 6 23 18 12 22 1 18" />
                   <line x1="12" y1="2" x2="12" y2="22" />
                   <line x1="1" y1="6" x2="23" y2="6" />
@@ -121,16 +122,49 @@ export default function App() {
                   <polyline points="18 4 18 20" opacity="0.4" />
                 </svg>
               </div>
-              <div>
+              <div className="brand-text-container">
                 <div className="brand-name">BHOOMI-X</div>
                 <div className="brand-sub">AI-Powered Geospatial Reconciliation & Harmonization</div>
               </div>
             </div>
           </div>
 
-          <div className="nav-divider" />
+          <div className="header-right">
+            {/* Live System Status */}
+            <div className="header-status-pill">
+              <span className="status-dot status-dot--live" />
+              <span>System Online</span>
+            </div>
 
-          <nav className="nav-tabs">
+            {/* Notification Bell */}
+            <button className="header-icon-btn" title="Notifications" onClick={() => setActiveTab('conflicts')}>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              {conflictCount > 0 && <span className="notification-dot">{conflictCount}</span>}
+            </button>
+
+            {/* SIH Badge */}
+            <span className="sih-badge">
+              <span className="sih-badge-icon">🏛</span>
+              SIH 2026
+            </span>
+
+            {/* User Avatar with name */}
+            <div className="user-block">
+              <div className="user-avatar">AH</div>
+              <div className="user-info">
+                <span className="user-name">Admin</span>
+                <span className="user-role">Surveyor</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tab Navigation Row */}
+        <nav className="nav-tabs-wrapper">
+          <div className="nav-tabs">
             {TABS.map(tab => (
               <button
                 key={tab.id}
@@ -148,40 +182,8 @@ export default function App() {
                 {activeTab === tab.id && <span className="tab-active-indicator" />}
               </button>
             ))}
-          </nav>
-        </div>
-
-        <div className="header-right">
-          {/* Live System Status */}
-          <div className="header-status-pill">
-            <span className="status-dot status-dot--live" />
-            <span>System Online</span>
           </div>
-
-          {/* Notification Bell */}
-          <button className="header-icon-btn" title="Notifications">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-            </svg>
-            <span className="notification-dot">{conflictCount}</span>
-          </button>
-
-          {/* SIH Badge */}
-          <span className="sih-badge">
-            <span className="sih-badge-icon">🏛</span>
-            SIH 2026 • PS 26013
-          </span>
-
-          {/* User Avatar with name */}
-          <div className="user-block">
-            <div className="user-avatar">AH</div>
-            <div className="user-info">
-              <span className="user-name">Admin</span>
-              <span className="user-role">Surveyor</span>
-            </div>
-          </div>
-        </div>
+        </nav>
       </header>
 
       {/* Main Content with Error Boundary */}

@@ -84,12 +84,12 @@ export default function Conflicts({ onNavigate }: Props) {
 
   return (
     <div className="page-scroll" style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
         <div>
           <h2 style={{ fontSize: 20, fontWeight: 800 }}>Conflict Review</h2>
           <p className="text-muted" style={{ fontSize: 13 }}>Review and resolve detected conflicts across data sources</p>
         </div>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', gap: 8 }}>
             <span className="badge badge-red" style={{ padding: '6px 14px', fontSize: 12 }}>{pending} Pending</span>
             <span className="badge badge-green" style={{ padding: '6px 14px', fontSize: 12 }}>{resolved} Resolved</span>
