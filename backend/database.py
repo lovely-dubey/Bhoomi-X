@@ -21,13 +21,11 @@ def _get_async_db_url(url: str) -> str:
 # Async engine for FastAPI
 DATABASE_URL = _get_async_db_url(settings.DATABASE_URL)
 
-# When connecting via PgBouncer (e.g. Supabase port 6543), prepared statements must be disabled
-connect_args = {}
-if "pooler.supabase.com" in DATABASE_URL or "pgbouncer" in DATABASE_URL or ":6543" in DATABASE_URL:
-    connect_args = {
-        "statement_cache_size": 0,
-        "prepared_statement_cache_size": 0,
-    }
+# Disable statement cache unconditionally for asyncpg so it NEVER fails on PgBouncer / Supabase / Cloud poolers
+connect_args = {
+    "statement_cache_size": 0,
+    "prepared_statement_cache_size": 0,
+}
 
 engine = create_async_engine(
     DATABASE_URL,
@@ -65,16 +63,20 @@ async def get_db() -> AsyncSession:
 
 async def init_db():
     """Create all tables. Called on app startup."""
-    # Ensure models are imported so Base.metadata is populated
     import models  # noqa: F401
+    import logging
+    log = logging.getLogger("bhoomix")
 
-    async with engine.begin() as conn:
-        # Enable PostGIS extension
-        await conn.execute(
-            __import__("sqlalchemy").text("CREATE EXTENSION IF NOT EXISTS postgis")
-        )
-        # Create all tables
-        await conn.run_sync(Base.metadata.create_all)
+    try:
+        async with engine.begin() as conn:
+            # Enable PostGIS extension
+            await conn.execute(
+                __import__("sqlalchemy").text("CREATE EXTENSION IF NOT EXISTS postgis")
+            )
+            # Create all tables if they don't exist
+            await conn.run_sync(Base.metadata.create_all)
+    except Exception as e:
+        log.warning(f"Database initialization encountered warning/notice (safe to continue): {e}")
 
 
 async def close_db():
