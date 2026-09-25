@@ -21,11 +21,20 @@ def _get_async_db_url(url: str) -> str:
 # Async engine for FastAPI
 DATABASE_URL = _get_async_db_url(settings.DATABASE_URL)
 
+# When connecting via PgBouncer (e.g. Supabase port 6543), prepared statements must be disabled
+connect_args = {}
+if "pooler.supabase.com" in DATABASE_URL or "pgbouncer" in DATABASE_URL or ":6543" in DATABASE_URL:
+    connect_args = {
+        "statement_cache_size": 0,
+        "prepared_statement_cache_size": 0,
+    }
+
 engine = create_async_engine(
     DATABASE_URL,
     echo=settings.DEBUG,
     pool_size=10,
     max_overflow=20,
+    connect_args=connect_args,
 )
 
 # Session factory
