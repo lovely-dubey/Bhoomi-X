@@ -28,9 +28,12 @@ ChartJS.register(
   Tooltip, Legend,
 );
 
-// Global chart defaults
+// Global chart defaults (snappy animation for zero lag)
 ChartJS.defaults.font.family = "'Inter', sans-serif";
 ChartJS.defaults.color = '#6b7280';
+ChartJS.defaults.animation = { duration: 350 };
+ChartJS.defaults.responsive = true;
+ChartJS.defaults.maintainAspectRatio = false;
 
 interface Props {
   onNavigate: (tab: string) => void;

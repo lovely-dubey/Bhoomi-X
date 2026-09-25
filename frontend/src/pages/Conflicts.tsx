@@ -100,7 +100,7 @@ export default function Conflicts({ onNavigate }: Props) {
         </div>
       </div>
 
-      <div className="card" style={{ flex: 1, padding: 0, overflow: 'auto' }}>
+      <div className="card" style={{ flex: 1, padding: 0, overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
         <table className="conflict-table">
           <thead>
             <tr>

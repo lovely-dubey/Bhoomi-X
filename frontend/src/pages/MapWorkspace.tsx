@@ -134,16 +134,20 @@ export default function MapWorkspace({ initialParcelId }: Props) {
       // Offline fallback
     }
 
+    if (!mapRef.current) return;
+
     parcelsDataRef.current = data;
     setParcelsData(data);
-    renderGeoJSON(map, data);
+    renderGeoJSON(map, data, true);
 
     if (initialParcelId) {
       openParcelById(initialParcelId, data);
     }
   };
 
-  const renderGeoJSON = (map: L.Map, data: any) => {
+  const renderGeoJSON = (map: L.Map, data: any, shouldFitBounds = false) => {
+    if (!map || !mapRef.current) return;
+
     if (geojsonLayerRef.current) {
       try {
         map.removeLayer(geojsonLayerRef.current);
@@ -182,27 +186,36 @@ export default function MapWorkspace({ initialParcelId }: Props) {
       },
     });
 
-    if (showParcels) {
-      layer.addTo(map);
+    if (showParcels && mapRef.current) {
+      try {
+        layer.addTo(map);
+      } catch {
+        // ignore if map unmounted
+      }
     }
     geojsonLayerRef.current = layer;
 
-    // Fit map bounds to parcels if layer has bounds and user hasn't zoomed
-    try {
-      const bounds = layer.getBounds();
-      if (bounds && bounds.isValid()) {
-        map.fitBounds(bounds, { padding: [20, 20], maxZoom: 18 });
+    // Fit map bounds only on initial load, not during rapid slider interaction
+    if (shouldFitBounds && mapRef.current) {
+      try {
+        const bounds = layer.getBounds();
+        if (bounds && bounds.isValid()) {
+          map.fitBounds(bounds, { padding: [20, 20], maxZoom: 18 });
+        }
+      } catch (e) {
+        // ignore
       }
-    } catch (e) {
-      // ignore
     }
   };
 
-  // Trigger re-filtering when filters change
+  // Trigger re-filtering when filters change (debounced 80ms for buttery smooth slider drag)
   useEffect(() => {
-    if (mapRef.current) {
-      renderGeoJSON(mapRef.current, parcelsDataRef.current || parcelsData);
-    }
+    const timer = setTimeout(() => {
+      if (mapRef.current) {
+        renderGeoJSON(mapRef.current, parcelsDataRef.current || parcelsData, false);
+      }
+    }, 80);
+    return () => clearTimeout(timer);
   }, [search, minConf, showConflictsOnly, activeStatuses, showParcels, parcelsData]);
 
   // Toggle buildings
