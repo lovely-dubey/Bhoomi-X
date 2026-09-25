@@ -125,6 +125,7 @@ export default function DataIngestion({ onNavigate }: DataIngestionProps) {
   };
 
   const handleLoad = async () => {
+    setUploading(true);
     try {
       await loadSampleData();
       const fresh = await fetchDatasets();
@@ -146,6 +147,8 @@ export default function DataIngestion({ onNavigate }: DataIngestionProps) {
         sourceType: 'cadastral',
         quarantined: 3,
       });
+    } finally {
+      setUploading(false);
     }
     setTimeout(() => setUploadMessage(null), 5000);
   };

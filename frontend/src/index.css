@@ -1275,6 +1275,114 @@ body {
   z-index: 998;
 }
 
+/* ===== MOBILE BOTTOM NAVIGATION BAR ===== */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: rgba(10, 22, 40, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 4px;
+}
+
+/* Hide on desktop by default */
+@media (min-width: 993px) {
+  .mobile-bottom-nav {
+    display: none !important;
+  }
+}
+
+.mobile-nav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.55);
+  padding: 6px 0;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  border-radius: 8px;
+}
+
+.mobile-nav-btn:active {
+  transform: scale(0.92);
+}
+
+.mobile-nav-btn.active {
+  color: #38bdf8;
+}
+
+.mobile-nav-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-nav-icon {
+  font-size: 19px;
+  transition: transform 0.2s ease;
+}
+
+.mobile-nav-btn.active .mobile-nav-icon {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.6));
+}
+
+.mobile-nav-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.mobile-nav-btn.active .mobile-nav-label {
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.mobile-nav-badge {
+  position: absolute;
+  top: -4px;
+  right: -10px;
+  background: var(--red-500);
+  color: white;
+  font-size: 9px;
+  font-weight: 800;
+  min-width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #0a1628;
+}
+
+.mobile-nav-pill-indicator {
+  position: absolute;
+  top: 0;
+  width: 24px;
+  height: 3px;
+  border-radius: 0 0 4px 4px;
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
+}
+
 /* Medium Laptops & Compact Desktops (<= 1200px) */
 @media (max-width: 1200px) {
   .dash-top {
@@ -1291,15 +1399,23 @@ body {
   }
 }
 
-/* Tablets (<= 992px) */
+/* Tablets & Mobile (<= 992px) */
 @media (max-width: 992px) {
+  .desktop-only-nav {
+    display: none !important;
+  }
+
+  .mobile-bottom-nav {
+    display: flex !important;
+  }
+
   .app-header {
-    height: auto;
-    min-height: auto;
-    padding: 10px 16px 8px;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
+    height: 52px;
+    min-height: 52px;
+    padding: 0 16px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
   
   .header-top-bar {
@@ -1307,27 +1423,9 @@ body {
     justify-content: space-between;
   }
 
-  .nav-tabs-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 2px;
-  }
-
-  .nav-tabs {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .nav-tab {
-    flex: 1;
-    justify-content: center;
-    padding: 7px 10px;
-    font-size: 12.5px;
-  }
-
   .app-main {
-    height: calc(100vh - 105px);
+    height: calc(100vh - 52px - 60px);
+    margin-bottom: 60px;
   }
 
   .dash-top {
@@ -1373,8 +1471,14 @@ body {
 /* Mobile Devices (<= 768px) */
 @media (max-width: 768px) {
   .app-header {
-    padding: 8px 12px 6px;
-    gap: 6px;
+    height: 48px;
+    min-height: 48px;
+    padding: 0 12px;
+  }
+
+  .app-main {
+    height: calc(100vh - 48px - 60px);
+    margin-bottom: 60px;
   }
 
   .brand-sub {
@@ -1382,17 +1486,17 @@ body {
   }
 
   .brand-name {
-    font-size: 17px;
-    letter-spacing: 1.5px;
+    font-size: 16px;
+    letter-spacing: 1.2px;
   }
 
   .brand-logo-icon {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
   }
 
   .header-status-pill {
-    padding: 4px 8px;
+    padding: 3px 8px;
     font-size: 10px;
   }
 
@@ -1408,38 +1512,6 @@ body {
     width: 28px;
     height: 28px;
     font-size: 11px;
-  }
-
-  .nav-tabs-wrapper {
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .nav-tabs-wrapper::-webkit-scrollbar {
-    display: none;
-  }
-
-  .nav-tabs {
-    min-width: 340px;
-    width: 100%;
-    padding: 2px;
-    gap: 2px;
-    background: rgba(255, 255, 255, 0.08);
-  }
-
-  .nav-tab {
-    padding: 6px 8px;
-    font-size: 12px;
-    gap: 4px;
-    border-radius: 6px;
-  }
-
-  .tab-icon {
-    font-size: 13px;
-  }
-
-  .app-main {
-    height: calc(100vh - 98px);
   }
 
   .page-scroll {

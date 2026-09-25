@@ -162,8 +162,8 @@ export default function App() {
           </div>
         </div>
 
-        {/* Tab Navigation Row */}
-        <nav className="nav-tabs-wrapper">
+        {/* Desktop Tab Navigation Row (hidden on mobile) */}
+        <nav className="nav-tabs-wrapper desktop-only-nav">
           <div className="nav-tabs">
             {TABS.map(tab => (
               <button
@@ -196,6 +196,29 @@ export default function App() {
           {activeTab === 'pipeline' && <Pipeline onNavigate={handleNavigate} autoRun={pipelineAutoRun} />}
         </TabErrorBoundary>
       </main>
+
+      {/* Mobile Bottom Navigation Bar — Native App Style */}
+      <nav className="mobile-bottom-nav">
+        {TABS.map(tab => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              className={`mobile-nav-btn ${isActive ? 'active' : ''}`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              <div className="mobile-nav-icon-wrap">
+                <span className="mobile-nav-icon">{tab.icon}</span>
+                {tab.id === 'conflicts' && conflictCount > 0 && (
+                  <span className="mobile-nav-badge">{conflictCount}</span>
+                )}
+              </div>
+              <span className="mobile-nav-label">{tab.label}</span>
+              {isActive && <span className="mobile-nav-pill-indicator" />}
+            </button>
+          );
+        })}
+      </nav>
     </div>
   );
 }
